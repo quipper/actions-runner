@@ -1,0 +1,41 @@
+name: e2e-test
+
+on:
+  workflow_call:
+    inputs:
+      runner-image-uri:
+        description: image URI of runner
+        type: string
+        required: true
+
+jobs:
+  controller:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: e2e-test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aquaproj/aqua-installer@v2.1.1
+        with:
+          aqua_version: v2.7.1
+          working_directory: e2e-test
+      - run: make cluster
+      - run: make deploy
+        env:
+          RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_INSTALLATION_ID: ${{ secrets.APP_INSTALLATION_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      - run: make wait-for-job
+      - run: sleep 5
+      - run: make logs
+        if: always()
+
+  runner:
+    runs-on: runner-scale-set-${{ github.run_id }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - run: docker version
