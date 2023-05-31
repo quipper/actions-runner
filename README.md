@@ -21,5 +21,5 @@ DO NOT add any package unless we really need it.
 For long-term maintainability and security,
 
 - Align to the official image
-- Less size as possible
-- Less script as possible
+- Less image size as possible
+- Less logic as possible
