@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":automergeMinor",
+    ":automergeDigest",
+    ":labels(renovate,renovate/{{depName}})",
+    "helpers:pinGitHubActionDigests",
+  ],
+  "regexManagers": [
+    {
+      "description": "Update actions/runner version",
+      "fileMatch": ["^\\.github/workflows/build\\.yaml$"],
+      "matchStrings": ["RUNNER_VERSION=(?<currentValue>.*?)\\s"],
+      "depNameTemplate": "actions/runner",
+      "datasourceTemplate": "github-releases",
+    },
+  ],
+}

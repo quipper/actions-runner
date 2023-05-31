@@ -1,1 +1,2 @@
-* @quipper/sre
+Dockerfile @quipper/sre
+entrypoint.sh @quipper/sre
