@@ -50,7 +50,7 @@ jobs:
           cache-from: ${{ steps.cache.outputs.cache-from }}
           cache-to: ${{ steps.cache.outputs.cache-to }}
           build-args: |
-            RUNNER_VERSION=
+            RUNNER_VERSION=2.304.0
           platforms: |
             linux/amd64
             linux/arm64
