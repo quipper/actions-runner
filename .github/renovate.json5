@@ -17,4 +17,11 @@
       "extractVersionTemplate": "^v(?<version>.*)$"
     },
   ],
+  "packageRules": [
+    {
+      "description": "TODO: enable automerge when it becomes stable",
+      "matchPackageNames": ["actions/runner"],
+      "automerge": false,
+    },
+  ]
 }
