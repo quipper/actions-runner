@@ -62,13 +62,22 @@ USER runner
 
 RUN sudo apt-get update && \
     sudo apt-get install -y --no-install-recommends \
-        build-essential \
+        # packages in actions-runner-controller/runner-22.04
+        curl \
         git \
+        jq \
+        unzip \
+        zip \
+        # packages in actions-runner-controller/runner-20.04
+        build-essential \
+        locales \
+        tzdata \
+        # dockerd dependencies
         tini \
         iptables
 
 # KEEP LESS PACKAGES:
-# It is the best practice to keep this image small for maintanability and security.
+# We'd like to keep this image small for maintanability and security.
 # See also,
 # https://github.com/actions/actions-runner-controller/pull/2050
 # https://github.com/actions/actions-runner-controller/blob/master/runner/actions-runner.ubuntu-22.04.dockerfile
