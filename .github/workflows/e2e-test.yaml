@@ -25,9 +25,9 @@ jobs:
       - run: make deploy
         env:
           RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-          APP_ID: ${{ secrets.APP_ID }}
-          APP_INSTALLATION_ID: ${{ secrets.APP_INSTALLATION_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
+          APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make wait-for-job
       - run: sleep 5
       - run: make logs
