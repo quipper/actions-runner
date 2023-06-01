@@ -16,10 +16,15 @@ As well as we add some packages for our workflows.
 We'd like to keep the image small as possible.
 DO NOT add any package unless we really need it.
 
-## Principles
-
 For long-term maintainability and security,
 
 - Align to the official image
 - Less image size as possible
 - Less logic as possible
+
+## Release
+
+Renovate creates a pull request to update the runner version.
+The workflow updates Dockerfile from [upstream](https://github.com/actions/runner/blob/main/images/Dockerfile).
+
+Then, we manually [create a release](https://github.com/quipper/actions-runner/releases).

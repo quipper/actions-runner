@@ -6,18 +6,33 @@ on:
       - .github/workflows/build.yaml
       - Dockerfile
       - entrypoint.sh
+      - hack/**
   push:
     paths:
       - .github/workflows/build.yaml
       - Dockerfile
       - entrypoint.sh
+      - hack/**
     branches:
       - main
     tags:
       - '*'
 
+env:
+  RUNNER_VERSION: 2.304.0
+
 jobs:
+  generate-dockerfile-from-upstream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - run: make -C hack
+      - run: cp hack/Dockerfile.generated Dockerfile
+      - uses: int128/update-generated-files-action@v2
+
   image:
+    needs: generate-dockerfile-from-upstream
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -50,7 +65,7 @@ jobs:
           cache-from: ${{ steps.cache.outputs.cache-from }}
           cache-to: ${{ steps.cache.outputs.cache-to }}
           build-args: |
-            RUNNER_VERSION=2.304.0
+            RUNNER_VERSION=${{ env.RUNNER_VERSION }}
           platforms: |
             linux/amd64
             linux/arm64
