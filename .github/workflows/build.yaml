@@ -26,10 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.2
       - run: make -C hack
       - run: cp hack/Dockerfile.generated Dockerfile
-      - uses: int128/update-generated-files-action@v2
+      - uses: int128/update-generated-files-action@v2.38.0
 
   image:
     needs: generate-dockerfile-from-upstream
