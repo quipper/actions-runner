@@ -1,4 +1,4 @@
-# quipper/actions-runner
+# quipper/actions-runner [![build](https://github.com/quipper/actions-runner/actions/workflows/build.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/build.yaml)
 
 This is a general-purpose container image of self-hosted runners in GitHub Actions.
 It is designed for RunnerScaleSets.
@@ -24,7 +24,18 @@ For long-term maintainability and security,
 
 ## Release
 
-Renovate creates a pull request to update the runner version.
-The workflow updates Dockerfile from [upstream](https://github.com/actions/runner/blob/main/images/Dockerfile).
+When a new version of actions/runner is released,
 
-Then, we manually [create a release](https://github.com/quipper/actions-runner/releases).
+1. Renovate creates a pull request
+2. GitHub Actions automatically regenerates the Dockerfile from [upstream](https://github.com/actions/runner/blob/main/images/Dockerfile)
+3. We will merge it and then [create a new release](https://github.com/quipper/actions-runner/releases)
+
+Here is the versioning policy.
+
+- Use same version as the upstream, such as `2.304.0`
+- If we have added a change, increment the patch version. For example, if the upstream is `2.304.0`, we will create `2.304.1`
+
+## Contributions
+
+This is an open source project.
+Feel free to open issues and pull requests for improving code and documents.
