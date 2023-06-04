@@ -10,6 +10,7 @@ We extend the official image of actions/runner to solve the following issues:
   We need to run a job on both amd64 and arm64 nodes ([#56720](https://github.com/orgs/community/discussions/56720))
 - It does not provide an image including dockerd.
   We would like to run both in same container for the resource efficiency in Kubernetes node
+- It is based on Debian, but some actions depend on Ubuntu, such as [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners)
 
 As well as we add some packages for our workflows.
 We'd like to keep the image small as possible.
@@ -26,8 +27,8 @@ For long-term maintainability and security,
 When a new version of actions/runner is released,
 
 1. Renovate creates a pull request
-2. GitHub Actions automatically regenerates the Dockerfile from [upstream](https://github.com/actions/runner/blob/main/images/Dockerfile)
-3. We will merge it and then [create a new release](https://github.com/quipper/actions-runner/releases)
+2. We merge it
+3. We [create a new release](https://github.com/quipper/actions-runner/releases)
 
 Here is the versioning policy.
 
