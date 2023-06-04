@@ -6,6 +6,7 @@
     ":automergeDigest",
     ":labels(renovate,renovate/{{depName}})",
     "helpers:pinGitHubActionDigests",
+    "github>aquaproj/aqua-renovate-config#1.6.0",
   ],
   "regexManagers": [
     {
