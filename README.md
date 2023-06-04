@@ -1,16 +1,15 @@
 # quipper/actions-runner [![build](https://github.com/quipper/actions-runner/actions/workflows/build.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/build.yaml)
 
-This is a general-purpose container image of self-hosted runners in GitHub Actions.
-It is designed for RunnerScaleSets.
+This is a container image of [actions/runner](https://github.com/actions/runner) for RunnerScaleSets.
 
 ## Purpose
 
-This extends the official image of [actions/runner](https://github.com/actions/runner) to solve the following issues:
+We extend the official image of actions/runner to solve the following issues:
 
-- GitHub does not provide a multi-architectures image.
-  We cannot run a job on arm64 nodes until [actions/runner#2630](https://github.com/actions/runner/pull/2630) is accepted.
-- GitHub does not provide an image which includes both runner and dockerd.
-  It is desired to run both in same container for the resource efficiency in Kubernetes node.
+- It does not provide a multi-architectures image.
+  We need to run a job on both amd64 and arm64 nodes ([#56720](https://github.com/orgs/community/discussions/56720))
+- It does not provide an image including dockerd.
+  We would like to run both in same container for the resource efficiency in Kubernetes node
 
 As well as we add some packages for our workflows.
 We'd like to keep the image small as possible.
@@ -18,7 +17,7 @@ DO NOT add any package unless we really need it.
 
 For long-term maintainability and security,
 
-- Align to the official image
+- Align with the upstream image
 - Less image size as possible
 - Less logic as possible
 
