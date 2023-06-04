@@ -18,6 +18,11 @@ wait-for-job:
 	kubectl get pods -n arc-runners
 	-kubectl logs -n arc-runners -l app.kubernetes.io/component=runner --tail=-1 -f
 
+# Unregister runners and runner sets from GitHub
+.PHONY: undeploy
+undeploy:
+	kubectl delete -n arc-runners --all AutoscalingRunnerSet
+
 .PHONY: logs
 logs:
 	-kubectl logs -n arc-systems -l app.kubernetes.io/component=controller-manager --tail=-1
