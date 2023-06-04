@@ -29,7 +29,8 @@ jobs:
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make wait-for-job
-      - run: sleep 5
+      - run: make undeploy
+        if: always()
       - run: make logs
         if: always()
 
