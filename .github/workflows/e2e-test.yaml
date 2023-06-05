@@ -45,3 +45,4 @@ jobs:
         with:
           ruby-version: 3
       - run: ruby --version
+      - run: gem --version
