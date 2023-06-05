@@ -25,6 +25,12 @@ RUN apt-get update -y \
         tini \
         iptables
 
+# KEEP LESS PACKAGES:
+# We'd like to keep this image small for maintanability and security.
+# See also,
+# https://github.com/actions/actions-runner-controller/pull/2050
+# https://github.com/actions/actions-runner-controller/blob/master/runner/actions-runner.ubuntu-22.04.dockerfile
+
 # keep /var/lib/apt/lists to reduce time of apt-get update in a job
 
 # set up the runner environment,
