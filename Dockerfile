@@ -56,7 +56,7 @@ RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-c
     && rm runner-container-hooks.zip
 
 RUN DOCKER_ARCH=x86_64 \
-    && if [ "$RUNNER_ARCH" = "arm64" ]; then DOCKER_ARCH=aarch64 ; fi \
+    && if [ "$TARGETARCH" = "arm64" ]; then DOCKER_ARCH=aarch64 ; fi \
     && curl -fLo docker.tgz https://download.docker.com/linux/static/stable/${DOCKER_ARCH}/docker-${DOCKER_VERSION}.tgz \
     && tar zxvf docker.tgz \
     && rm -rf docker.tgz \
