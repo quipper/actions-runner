@@ -21,6 +21,8 @@ RUN apt-get update -y \
         build-essential \
         locales \
         tzdata \
+        # ruby/setup-ruby dependencies
+        libyaml-dev \
         # dockerd dependencies
         tini \
         iptables
