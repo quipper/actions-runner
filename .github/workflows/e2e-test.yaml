@@ -37,12 +37,32 @@ jobs:
   runner:
     runs-on: runner-scale-set-${{ github.run_id }}
     timeout-minutes: 10
+    services:
+      http:
+        image: nginx:stable
+        ports:
+          - 8080:80
     steps:
       - uses: actions/checkout@v3
+
+      # Test dockerd
       - run: docker version
-      # setup actions
+      - run: docker run -v "$PWD:/workspace" --rm debian:stable ls -l /workspace/README.md
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/build-push-action@v4
+        with:
+          push: false
+          context: e2e-test
+          file: e2e-test/fixture.dockerfile
+
+      # Test setup actions
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3
       - run: ruby --version
       - run: gem --version
+      - uses: actions/setup-python@v4
+      - run: python --version
+
+      # Test service container
+      - run: curl -sf http://localhost:8080
