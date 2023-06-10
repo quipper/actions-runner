@@ -1,32 +1,33 @@
 # quipper/actions-runner [![build](https://github.com/quipper/actions-runner/actions/workflows/build.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/build.yaml)
 
-This is a container image of [actions/runner](https://github.com/actions/runner) for RunnerScaleSets.
+This is a container image of [actions/runner](https://github.com/actions/runner) for the new RunnerScaleSets.
 
 ## Purpose
 
-We extend the official image of actions/runner to solve the following issues:
+We extend the Dockerfile of actions/runner to solve the following issues:
 
-- It does not provide a multi-architectures image.
-  We need to run a job on both amd64 and arm64 nodes ([#56720](https://github.com/orgs/community/discussions/56720))
-- It does not provide an image including dockerd.
-  We would like to run both in same container for the resource efficiency in Kubernetes node
-- It is based on Debian, but some actions depend on Ubuntu, such as [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners)
+- We need to run a job on both amd64 and arm64 nodes.
+  This repository provides a multi-architectures image.
+  ([community#56720](https://github.com/orgs/community/discussions/56720))
+- We would like to run both runner and Dockerd in same container for the resource efficiency of Kubernetes nodes.
+  This image starts Dockerd under [tini](https://github.com/krallin/tini).
+- We need to use [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) but it does not support Debian.
+  This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))
+- We need some essential packages such as `git`
 
-As well as we add some packages for our workflows.
-We'd like to keep the image small as possible.
-DO NOT add any package unless we really need it.
+We are looking for the official supports, but need to maintain our custom image for now.
 
 For long-term maintainability and security,
 
 - Align with the upstream image
-- Less image size as possible
-- Less logic as possible
+- Keep less packages
+- Keep simple logic
 
 ## Release
 
 When a new version of actions/runner is released,
 
-1. Renovate creates a pull request
+1. Renovate creates a pull request to update a dependency
 2. We merge it
 3. We [create a new release](https://github.com/quipper/actions-runner/releases)
 
