@@ -1,6 +1,6 @@
 # use Ubuntu 22.04 for compatibility with GitHub-hosted runners
 # https://github.com/ruby/setup-ruby#using-self-hosted-runners
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-jammy
+FROM mcr.microsoft.com/dotnet/runtime-deps:7.0-jammy
 
 ARG TARGETARCH
 ARG RUNNER_VERSION
