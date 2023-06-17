@@ -24,7 +24,7 @@ env:
   RUNNER_VERSION: 2.304.0
 
 jobs:
-  ubuntu22:
+  image:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -63,20 +63,20 @@ jobs:
             linux/arm64
 
   e2e-test:
-    needs: ubuntu22
+    needs: image
     uses: ./.github/workflows/e2e-test.yaml
     secrets: inherit
     with:
-      runner-image-uri: ${{ needs.ubuntu22.outputs.image-uri }}
+      runner-image-uri: ${{ needs.image.outputs.image-uri }}
 
-  ubuntu20:
+  image-ubuntu20:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
       packages: write
     outputs:
-      image-uri: ghcr.io/${{ github.repository }}/ubuntu20@${{ steps.build.outputs.digest }}
+      image-uri: ghcr.io/${{ github.repository }}@${{ steps.build.outputs.digest }}
     steps:
       - uses: docker/login-action@v2.1.0
         with:
@@ -86,12 +86,13 @@ jobs:
       - uses: docker/metadata-action@v4.4.0
         id: metadata
         with:
-          images: ghcr.io/${{ github.repository }}/ubuntu20
-      - uses: int128/docker-build-cache-config-action@v1.14.0
+          images: ghcr.io/${{ github.repository }}
+          flavor: suffix=-ubuntu20
+      - uses: int128/docker-build-cache-config-action@v1.15.0
         id: cache
         with:
           image: ghcr.io/${{ github.repository }}/cache
-          tag-suffix: -ubuntu20
+          flavor: suffix=-ubuntu20
       - uses: docker/setup-qemu-action@v2.1.0
       - uses: docker/setup-buildx-action@v2.5.0
       - uses: docker/build-push-action@v4.0.0
@@ -104,7 +105,7 @@ jobs:
           cache-to: ${{ steps.cache.outputs.cache-to }}
           build-args: |
             RUNNER_VERSION=${{ env.RUNNER_VERSION }}
-            BASE_IMAGE_FLAVOR=focal
+            BASE_IMAGE_OS=focal
             ImageOS=ubuntu20
           platforms: |
             linux/amd64
