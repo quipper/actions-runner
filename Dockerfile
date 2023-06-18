@@ -69,6 +69,8 @@ RUN mkdir /opt/hostedtoolcache \
 
 COPY entrypoint.sh /
 
+VOLUME /var/lib/docker
+
 # some setup actions depend on ImageOS variable
 # https://github.com/actions/runner-images/issues/345
 ENV ImageOS=ubuntu22
