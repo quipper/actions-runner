@@ -1,6 +1,5 @@
-# use Ubuntu 22.04 for compatibility with GitHub-hosted runners
-# https://github.com/ruby/setup-ruby#using-self-hosted-runners
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-jammy
+ARG BASE_IMAGE_OS=jammy
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-${BASE_IMAGE_OS}
 
 ARG TARGETARCH
 ARG RUNNER_VERSION
@@ -22,6 +21,7 @@ RUN apt-get update -y \
         locales \
         tzdata \
         # ruby/setup-ruby dependencies
+        # https://github.com/ruby/setup-ruby#using-self-hosted-runners
         libyaml-dev \
         # dockerd dependencies
         tini \
@@ -73,7 +73,8 @@ VOLUME /var/lib/docker
 
 # some setup actions depend on ImageOS variable
 # https://github.com/actions/runner-images/issues/345
-ENV ImageOS=ubuntu22
+ARG ImageOS=ubuntu22
+ENV ImageOS=${ImageOS}
 
 USER runner
 ENTRYPOINT ["/usr/bin/tini", "--", "/entrypoint.sh"]
