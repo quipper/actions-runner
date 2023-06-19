@@ -78,24 +78,24 @@ jobs:
     outputs:
       image-uri: ghcr.io/${{ github.repository }}@${{ steps.build.outputs.digest }}
     steps:
-      - uses: docker/login-action@v2.1.0
+      - uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@v4.4.0
+      - uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e # v4.4.0
         id: metadata
         with:
           images: ghcr.io/${{ github.repository }}
           flavor: suffix=-ubuntu20
-      - uses: int128/docker-build-cache-config-action@v1.15.0
+      - uses: int128/docker-build-cache-config-action@ad84c9c54c01578e767b17eae930bf1c9ae6dc46 # v1.15.0
         id: cache
         with:
           image: ghcr.io/${{ github.repository }}/cache
           flavor: suffix=-ubuntu20
-      - uses: docker/setup-qemu-action@v2.1.0
-      - uses: docker/setup-buildx-action@v2.5.0
-      - uses: docker/build-push-action@v4.0.0
+      - uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18 # v2.1.0
+      - uses: docker/setup-buildx-action@4b4e9c3e2d4531116a6f8ba8e71fc6e2cb6e6c8c # v2.5.0
+      - uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4.0.0
         id: build
         with:
           push: true
