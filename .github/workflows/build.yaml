@@ -21,7 +21,7 @@ on:
       - '*'
 
 env:
-  RUNNER_VERSION: 2.305.0
+  RUNNER_VERSION: 2.306.0
 
 jobs:
   image:
