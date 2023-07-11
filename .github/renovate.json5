@@ -5,6 +5,7 @@
     ":automergeMinor",
     ":automergeDigest",
     ":labels(renovate,renovate/{{depName}})",
+    ":reviewer(team:sre)",
     "helpers:pinGitHubActionDigests",
     "github>aquaproj/aqua-renovate-config#1.6.0",
   ],
