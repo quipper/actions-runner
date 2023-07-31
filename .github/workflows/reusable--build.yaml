@@ -1,30 +1,22 @@
 name: build
 
 on:
-  pull_request:
-    paths:
-      - .github/workflows/build.yaml
-      - .github/workflows/e2e-test.yaml
-      - Dockerfile
-      - entrypoint.sh
-      - e2e-test/**
-  push:
-    paths:
-      - .github/workflows/build.yaml
-      - .github/workflows/e2e-test.yaml
-      - Dockerfile
-      - entrypoint.sh
-      - e2e-test/**
-    branches:
-      - main
-    tags:
-      - '*'
-
-env:
-  RUNNER_VERSION: 2.307.1
+  workflow_call:
+    inputs:
+      context:
+        type: string
+        required: false
+        description: context passed to docker/build-push-action
+      tags:
+        type: string
+        required: false
+        description: tags passed to docker/metadata-action
+    outputs:
+      image-uri:
+        value: ${{ jobs.runner.outputs.image-uri }}
 
 jobs:
-  image:
+  runner:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -42,6 +34,7 @@ jobs:
         id: metadata
         with:
           images: ghcr.io/${{ github.repository }}
+          tags: ${{ inputs.tags }}
       - uses: int128/docker-build-cache-config-action@ad84c9c54c01578e767b17eae930bf1c9ae6dc46 # v1.15.0
         id: cache
         with:
@@ -51,25 +44,17 @@ jobs:
       - uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825 # v4.1.1
         id: build
         with:
+          context: ${{ inputs.context }}
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: ${{ steps.cache.outputs.cache-from }}
           cache-to: ${{ steps.cache.outputs.cache-to }}
-          build-args: |
-            RUNNER_VERSION=${{ env.RUNNER_VERSION }}
           platforms: |
             linux/amd64
             linux/arm64
 
-  e2e-test:
-    needs: image
-    uses: ./.github/workflows/e2e-test.yaml
-    secrets: inherit
-    with:
-      runner-image-uri: ${{ needs.image.outputs.image-uri }}
-
-  image-ubuntu20:
+  runner-ubuntu20:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -87,6 +72,7 @@ jobs:
         id: metadata
         with:
           images: ghcr.io/${{ github.repository }}
+          tags: ${{ inputs.tags }}
           flavor: suffix=-ubuntu20
       - uses: int128/docker-build-cache-config-action@ad84c9c54c01578e767b17eae930bf1c9ae6dc46 # v1.15.0
         id: cache
@@ -98,13 +84,13 @@ jobs:
       - uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825 # v4.1.1
         id: build
         with:
+          context: ${{ inputs.context }}
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: ${{ steps.cache.outputs.cache-from }}
           cache-to: ${{ steps.cache.outputs.cache-to }}
           build-args: |
-            RUNNER_VERSION=${{ env.RUNNER_VERSION }}
             BASE_IMAGE_OS=focal
             ImageOS=ubuntu20
           platforms: |

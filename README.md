@@ -1,4 +1,4 @@
-# quipper/actions-runner [![build](https://github.com/quipper/actions-runner/actions/workflows/build.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/build.yaml)
+# quipper/actions-runner [![test](https://github.com/quipper/actions-runner/actions/workflows/test.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/test.yaml)
 
 This is a container image of [actions/runner](https://github.com/actions/runner) for the new RunnerScaleSets.
 
@@ -28,8 +28,8 @@ For long-term maintainability and security,
 When a new version of actions/runner is released,
 
 1. Renovate creates a pull request to update a dependency
-2. We merge it
-3. We [create a new release](https://github.com/quipper/actions-runner/releases)
+2. We manually merge it
+3. GitHub Actions automatically creates [a release](https://github.com/quipper/actions-runner/releases) corresponding to the runner version
 
 Here is the versioning policy.
 

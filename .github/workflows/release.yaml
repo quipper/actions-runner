@@ -1,0 +1,44 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/release.yaml
+      - .github/workflows/reusable--build.yaml
+      - Dockerfile
+
+jobs:
+  # When the runner version is updated by Renovate,
+  # create a new release.
+  create-release-if-not-exists:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - run: bash hack/create-release-if-not-exists.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Since GITHUB_TOKEN does not trigger the workflow,
+  # we need to manually build a new release.
+  get-latest-release:
+    needs: create-release-if-not-exists
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      tag: ${{ steps.latest-release.outputs.tag }}
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - run: echo "tag=$(gh release view --json tagName --jq .tagName)" >> "$GITHUB_OUTPUT"
+        id: latest-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-latest-release:
+    needs: get-latest-release
+    uses: ./.github/workflows/reusable--build.yaml
+    with:
+      context: https://github.com/${{ github.repository }}.git#${{ needs.get-latest-release.outputs.tag }}
+      tags: ${{ needs.get-latest-release.outputs.tag }}
