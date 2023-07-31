@@ -1,4 +1,4 @@
-# quipper/actions-runner [![build](https://github.com/quipper/actions-runner/actions/workflows/build.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/build.yaml)
+# quipper/actions-runner [![test](https://github.com/quipper/actions-runner/actions/workflows/test.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/test.yaml)
 
 This is a container image of [actions/runner](https://github.com/actions/runner) for the new RunnerScaleSets.
 
