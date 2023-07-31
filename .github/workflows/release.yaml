@@ -1,6 +1,12 @@
 name: release
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/release.yaml
+      - .github/workflows/reusable--build.yaml
+      - Dockerfile
+      - hack/**
   push:
     branches:
       - main
@@ -8,6 +14,7 @@ on:
       - .github/workflows/release.yaml
       - .github/workflows/reusable--build.yaml
       - Dockerfile
+      - hack/**
 
 jobs:
   # When the runner version is updated by Renovate,
@@ -24,6 +31,7 @@ jobs:
   # Since GITHUB_TOKEN does not trigger the workflow,
   # we need to manually build a new release.
   get-latest-release:
+    if: github.event_name == 'push'
     needs: create-release-if-not-exists
     runs-on: ubuntu-latest
     timeout-minutes: 10
