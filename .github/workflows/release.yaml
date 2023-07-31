@@ -1,6 +1,12 @@
 name: release
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/release.yaml
+      - .github/workflows/reusable--build.yaml
+      - Dockerfile
+      - hack/**
   push:
     branches:
       - main
@@ -8,6 +14,7 @@ on:
       - .github/workflows/release.yaml
       - .github/workflows/reusable--build.yaml
       - Dockerfile
+      - hack/**
 
 jobs:
   # When the runner version is updated by Renovate,
