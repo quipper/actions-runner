@@ -7,9 +7,11 @@ on:
     paths:
       - .github/workflows/release.yaml
       - .github/workflows/reusable--build.yaml
-      - .actions-runner-version
+      - Dockerfile
 
 jobs:
+  # When the runner version is updated by Renovate,
+  # create a new release.
   create-release-if-not-exists:
     runs-on: ubuntu-latest
     timeout-minutes: 10
