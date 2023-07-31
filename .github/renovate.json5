@@ -12,8 +12,8 @@
   "regexManagers": [
     {
       "description": "Update actions/runner version",
-      "fileMatch": ["^\\.github/workflows/build\\.yaml$"],
-      "matchStrings": ["RUNNER_VERSION: (?<currentValue>.*?)\\s"],
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["RUNNER_VERSION=(?<currentValue>.*?)\\s"],
       "depNameTemplate": "actions/runner",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"

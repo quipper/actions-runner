@@ -28,8 +28,8 @@ For long-term maintainability and security,
 When a new version of actions/runner is released,
 
 1. Renovate creates a pull request to update a dependency
-2. We merge it
-3. We [create a new release](https://github.com/quipper/actions-runner/releases)
+2. We manually merge it
+3. GitHub Actions automatically creates [a release](https://github.com/quipper/actions-runner/releases) corresponding to the runner version
 
 Here is the versioning policy.
 
