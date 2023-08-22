@@ -18,6 +18,8 @@
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
     },
+  ],
+  "packageRules": [
     {
       "description": "Group actions-runner-controller charts",
       "matchPackageNames": [
@@ -26,8 +28,6 @@
       ],
       "groupName": "actions-runner-controller-charts",
     },
-  ],
-  "packageRules": [
     {
       "description": "TODO: enable automerge when it becomes stable",
       "matchPackageNames": ["actions/runner"],
