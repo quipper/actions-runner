@@ -18,6 +18,14 @@
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
     },
+    {
+      "description": "Group actions-runner-controller charts",
+      "matchPackageNames": [
+        "gha-runner-scale-set-controller",
+        "gha-runner-scale-set",
+      ],
+      "groupName": "actions-runner-controller-charts",
+    },
   ],
   "packageRules": [
     {
