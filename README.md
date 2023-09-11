@@ -11,8 +11,9 @@ We extend the Dockerfile of actions/runner to solve the following issues:
   ([community#56720](https://github.com/orgs/community/discussions/56720))
 - We would like to run both runner and Dockerd in same container for the resource efficiency of Kubernetes nodes.
   This image starts Dockerd under [tini](https://github.com/krallin/tini).
-- We need to use [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) but it does not support Debian.
-  This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))
+- ~We need to use [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) but it does not support Debian.
+  This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))~
+     - The official docker image also has been based on Ubuntu since [runner#2651](https://github.com/actions/runner/pull/2651) had been merged.
 - We need some essential packages such as `git`
 
 We are looking for the official supports, but need to maintain our custom image for now.
