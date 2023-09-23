@@ -8,6 +8,7 @@ on:
       - .github/workflows/reusable--build-and-test.yaml
       - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
+      - Dockerfile.*
       - hack/**
   push:
     branches:
@@ -18,6 +19,7 @@ on:
       - .github/workflows/reusable--build-and-test.yaml
       - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
+      - Dockerfile.*
       - hack/**
 
 jobs:
