@@ -5,6 +5,7 @@ on:
     paths:
       - .github/workflows/test.yaml
       - .github/workflows/reusable--build.yaml
+      - .github/workflows/reusable--build-and-test.yaml
       - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
       - entrypoint.sh
@@ -13,6 +14,7 @@ on:
     paths:
       - .github/workflows/test.yaml
       - .github/workflows/reusable--build.yaml
+      - .github/workflows/reusable--build-and-test.yaml
       - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
       - entrypoint.sh
@@ -25,10 +27,3 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/reusable--build.yaml
-
-  e2e-test:
-    needs: build
-    uses: ./.github/workflows/reusable--e2e-test.yaml
-    secrets: inherit
-    with:
-      runner-image-uri: ${{ needs.build.outputs.image-uri }}
