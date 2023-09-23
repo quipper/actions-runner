@@ -51,6 +51,7 @@ jobs:
   build-latest-release:
     needs: get-latest-release
     uses: ./.github/workflows/reusable--build.yaml
+    secrets: inherit
     with:
       context: https://github.com/${{ github.repository }}.git#${{ needs.get-latest-release.outputs.tag }}
       tags: ${{ needs.get-latest-release.outputs.tag }}

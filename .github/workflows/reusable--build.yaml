@@ -15,6 +15,7 @@ on:
 jobs:
   runner:
     uses: ./.github/workflows/reusable--build-and-test.yaml
+    secrets: inherit
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
@@ -22,6 +23,7 @@ jobs:
 
   runner-ubuntu20:
     uses: ./.github/workflows/reusable--build-and-test.yaml
+    secrets: inherit
     with:
       context: ${{ inputs.context }}
       build-args: |

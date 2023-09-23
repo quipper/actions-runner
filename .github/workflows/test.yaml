@@ -27,3 +27,4 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/reusable--build.yaml
+    secrets: inherit

@@ -72,6 +72,7 @@ jobs:
   e2e-test:
     needs: build
     uses: ./.github/workflows/reusable--e2e-test.yaml
+    secrets: inherit
     with:
       runner-image-uri: ${{ needs.build.outputs.image-uri }}
       runner-name: ${{ inputs.runner-name }}
