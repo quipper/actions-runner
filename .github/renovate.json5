@@ -12,7 +12,7 @@
   "regexManagers": [
     {
       "description": "Update actions/runner version",
-      "fileMatch": ["^Dockerfile$"],
+      "fileMatch": ["^Dockerfile"],
       "matchStrings": ["RUNNER_VERSION=(?<currentValue>.*?)\\s"],
       "depNameTemplate": "actions/runner",
       "datasourceTemplate": "github-releases",
