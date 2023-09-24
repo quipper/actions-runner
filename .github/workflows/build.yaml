@@ -1,16 +1,36 @@
 name: build
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/build.yaml
+      - .github/workflows/reusable--build-and-test.yaml
+      - .github/workflows/reusable--e2e-test.yaml
+      - Dockerfile
+      - entrypoint.sh
+      - e2e-test/**
+  push:
+    paths:
+      - .github/workflows/build.yaml
+      - .github/workflows/reusable--build-and-test.yaml
+      - .github/workflows/reusable--e2e-test.yaml
+      - Dockerfile
+      - entrypoint.sh
+      - e2e-test/**
+    branches:
+      - main
+    tags:
+      - '*'
   workflow_call:
     inputs:
       context:
         type: string
         required: false
-        description: context passed to docker/build-push-action
+        description: context passed to docker/build-push-action (optional)
       tags:
         type: string
         required: false
-        description: tags passed to docker/metadata-action
+        description: tags passed to docker/metadata-action (optional)
 
 jobs:
   runner:
@@ -26,9 +46,9 @@ jobs:
     secrets: inherit
     with:
       context: ${{ inputs.context }}
+      tags: ${{ inputs.tags }}
       build-args: |
         BASE_IMAGE_OS=focal
         ImageOS=ubuntu20
-      tags: ${{ inputs.tags }}
       flavor: suffix=-ubuntu20
       runner-name: runner-ubuntu20-${{ github.run_id }}

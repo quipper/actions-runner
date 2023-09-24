@@ -28,8 +28,8 @@ jobs:
       - run: make cluster
       - run: make deploy
         env:
-          RUNNER_NAME: ${{ inputs.runner-name }}
-          RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-name }}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
