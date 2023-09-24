@@ -4,7 +4,9 @@ on:
   pull_request:
     paths:
       - .github/workflows/release.yaml
-      - .github/workflows/reusable--build.yaml
+      - .github/workflows/build.yaml
+      - .github/workflows/reusable--build-and-test.yaml
+      - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
       - hack/**
   push:
@@ -12,7 +14,9 @@ on:
       - main
     paths:
       - .github/workflows/release.yaml
-      - .github/workflows/reusable--build.yaml
+      - .github/workflows/build.yaml
+      - .github/workflows/reusable--build-and-test.yaml
+      - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
       - hack/**
 
@@ -46,7 +50,8 @@ jobs:
 
   build-latest-release:
     needs: get-latest-release
-    uses: ./.github/workflows/reusable--build.yaml
+    uses: ./.github/workflows/build.yaml
+    secrets: inherit
     with:
       context: https://github.com/${{ github.repository }}.git#${{ needs.get-latest-release.outputs.tag }}
       tags: ${{ needs.get-latest-release.outputs.tag }}

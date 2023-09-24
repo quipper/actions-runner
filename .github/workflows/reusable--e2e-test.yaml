@@ -4,9 +4,13 @@ on:
   workflow_call:
     inputs:
       runner-image-uri:
-        description: image URI of runner
         type: string
         required: true
+        description: image URI of runner
+      runner-name:
+        type: string
+        required: true
+        description: runner name
 
 jobs:
   controller:
@@ -24,7 +28,8 @@ jobs:
       - run: make cluster
       - run: make deploy
         env:
-          RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-name }}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
@@ -35,7 +40,7 @@ jobs:
         if: always()
 
   runner:
-    runs-on: runner-scale-set-${{ github.run_id }}
+    runs-on: ${{ inputs.runner-name }}
     timeout-minutes: 10
     services:
       http:
@@ -43,6 +48,10 @@ jobs:
         ports:
           - 8080:80
     steps:
+      - run: uname -a
+      - run: cat /etc/os-release
+
+      # Test checkout
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
 
       # Test dockerd
