@@ -7,6 +7,10 @@ on:
         type: string
         required: false
         description: context passed to docker/build-push-action
+      file:
+        type: string
+        required: false
+        description: file passed to docker/build-push-action
       build-args:
         type: string
         required: false
@@ -59,6 +63,7 @@ jobs:
         id: build
         with:
           context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}

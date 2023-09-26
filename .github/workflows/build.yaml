@@ -7,6 +7,7 @@ on:
       - .github/workflows/reusable--build-and-test.yaml
       - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
+      - Dockerfile.*
       - entrypoint.sh
       - e2e-test/**
   push:
@@ -15,6 +16,7 @@ on:
       - .github/workflows/reusable--build-and-test.yaml
       - .github/workflows/reusable--e2e-test.yaml
       - Dockerfile
+      - Dockerfile.*
       - entrypoint.sh
       - e2e-test/**
     branches:
@@ -47,8 +49,6 @@ jobs:
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
-      build-args: |
-        BASE_IMAGE_OS=focal
-        ImageOS=ubuntu20
+      file: Dockerfile.ubuntu20
       flavor: suffix=-ubuntu20
       runner-name: runner-ubuntu20-${{ github.run_id }}
