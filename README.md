@@ -6,14 +6,13 @@ This is a container image of [actions/runner](https://github.com/actions/runner)
 
 We extend the Dockerfile of actions/runner to solve the following issues:
 
-- We need to run a job on both amd64 and arm64 nodes.
+- ~We need to run a job on both amd64 and arm64 nodes.
   This repository provides a multi-architectures image.
-  ([community#56720](https://github.com/orgs/community/discussions/56720))
+  ([community#56720](https://github.com/orgs/community/discussions/56720))~ (resolved by [actions/runner#2601](https://github.com/actions/runner/pull/2601))
 - We would like to run both runner and Dockerd in same container for the resource efficiency of Kubernetes nodes.
   This image starts Dockerd under [tini](https://github.com/krallin/tini).
 - ~We need to use [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) but it does not support Debian.
-  This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))~
-     - The official docker image also has been based on Ubuntu since [runner#2651](https://github.com/actions/runner/pull/2651) had been merged.
+  This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))~ (resolved by [actions/runner#2651](https://github.com/actions/runner/pull/2651))
 - We need some essential packages such as `git`
 
 We are looking for the official supports, but need to maintain our custom image for now.
