@@ -79,7 +79,9 @@ jobs:
       - run: curl -sf http://localhost:8080
 
       # Test the hosted tool cache
-      - run: /home/runner/externals/node20/bin/npm install @actions/tool-cache
+      - run: |
+          export PATH="$PATH:/home/runner/externals/node20/bin"
+          npm install @actions/tool-cache
       - uses: actions/github-script@v6
         with:
           script: |

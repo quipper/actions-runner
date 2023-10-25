@@ -73,7 +73,7 @@ RUN mkdir /opt/hostedtoolcache \
 COPY hostedtoolcache/ /tmp/hostedtoolcache/
 RUN cd /tmp/hostedtoolcache \
     && TARGETARCH="${TARGETARCH}" TARGETOS="${TARGETOS}" bash actions-setup-node.sh \
-    && sudo rm -fr /tmp/hostedtoolcache
+    && rm -fr /tmp/hostedtoolcache
 
 COPY entrypoint.sh /
 
