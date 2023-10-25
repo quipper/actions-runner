@@ -17,12 +17,9 @@ test "${NODE_VERSION}"
 
 function download_nodejs () {
   mkdir -p "${RUNNER_TOOL_CACHE}/node/${NODE_VERSION}/${NODE_ARCH}"
-
-  curl -sf -o node.tar.gz -L "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${TARGETOS}-${NODE_ARCH}.tar.gz"
-  tar -xzf node.tar.gz -C "${RUNNER_TOOL_CACHE}/node/${NODE_VERSION}/${NODE_ARCH}"
-  rm -v node.tar.gz
+  curl -sf -L "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-${TARGETOS}-${NODE_ARCH}.tar.gz" |
+    tar -xzf - -C "${RUNNER_TOOL_CACHE}/node/${NODE_VERSION}/${NODE_ARCH}"
   touch "${RUNNER_TOOL_CACHE}/node/${NODE_VERSION}/${NODE_ARCH}.complete"
-
   chown -R runner:docker "${RUNNER_TOOL_CACHE}/node"
 }
 
