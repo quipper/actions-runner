@@ -90,4 +90,5 @@ jobs:
             const tc = require('@actions/tool-cache')
             const expectedVersion = fs.readFileSync('hostedtoolcache/.node-version').toString().trim()
             const versions = tc.findAllVersions('node')
-            assert.strictEqual(versions, [expectedVersion])
+            assert.strictEqual(versions.length, 1)
+            assert.strictEqual(versions[0], expectedVersion)
