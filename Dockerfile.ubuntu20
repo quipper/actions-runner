@@ -66,47 +66,14 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
 
 # some setup actions store cache into /opt/hostedtoolcache
 ENV RUNNER_TOOL_CACHE /opt/hostedtoolcache
-
 RUN mkdir /opt/hostedtoolcache \
     && chown runner:docker /opt/hostedtoolcache
 
-# We pre-install nodejs to reduce time of setup-node and improve its reliability.
-ENV NODE_VERSION 18.18.2
-
-RUN if [ "${TARGETARCH}" = "amd64" ]; then export NODE_ARCH=x64 ; else export NODE_ARCH=${TARGETARCH} ; fi; \
-    mkdir -p /opt/hostedtoolcache/node/${NODE_VERSION}/${NODE_ARCH} && \
-    curl -s -L https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.gz \
-    | tar xvzf - -C /opt/hostedtoolcache/node/${NODE_VERSION}/${NODE_ARCH} \
-    && touch /opt/hostedtoolcache/node/${NODE_VERSION}/${NODE_ARCH}.complete \
-    && chown -R runner:docker /opt/hostedtoolcache/node && \
-    ${RUNNER_TOOL_CACHE}/node/${NODE_VERSION}/${NODE_ARCH}/node-v${NODE_VERSION}-linux-${NODE_ARCH}/bin/node --version
-
-RUN export PATH=$PATH:/home/runner/externals/node20/bin ; export NODE_PATH=/home/runner/externals/node20/lib/node_modules ; \
-    npm install -g @actions/tool-cache && node <<EOF && npm uninstall -g @actions/tool-cache
-const tc = require('@actions/tool-cache');
-const allNodeVersions = tc.findAllVersions('node');
-const expected = ['${NODE_VERSION}'];
-if (expected[0] == '') {
-  console.log('Invalid NODE_VERSION: ' + expected[0]);
-  process.on("exit", function() {
-      process.exit(1);
-  });
-} else if (allNodeVersions.length != expected.length) {
-  console.log('Expected versions of node available: ' + expected);
-  console.log('Actual versions of node available: ' + allNodeVersions);
-  process.on("exit", function() {
-    process.exit(1);
-  });
-} else if (allNodeVersions[0] != expected[0]) {
-  console.log('Expected versions of node available: ' + expected);
-  console.log('Actual versions of node available: ' + allNodeVersions);
-  process.on("exit", function() {
-    process.exit(1);
-  });
-} else {
-  console.log('Versions of node available: ' + allNodeVersions);
-}
-EOF
+# Pre-install Node.js for actions/setup-node
+COPY hostedtoolcache/ /tmp/hostedtoolcache/
+RUN cd /tmp/hostedtoolcache \
+    && TARGETARCH="${TARGETARCH}" TARGETOS="${TARGETOS}" bash actions-setup-node.sh \
+    && sudo rm -fr /tmp/hostedtoolcache
 
 COPY entrypoint.sh /
 
