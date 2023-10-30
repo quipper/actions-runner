@@ -94,7 +94,7 @@ jobs:
             core.info(`versions = ${JSON.stringify(versions)}`)
             assert.strictEqual(versions.length, 1)
             assert.strictEqual(versions[0], expectedVersion)
-      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
+      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
           node-version-file: hostedtoolcache/.node-version
       - run: node --version
