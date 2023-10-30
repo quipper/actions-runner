@@ -3,6 +3,9 @@ ARG RUNNER_VERSION=2.311.0
 # extends https://github.com/actions/runner/blob/main/images/Dockerfile
 FROM ghcr.io/actions/actions-runner:${RUNNER_VERSION}
 
+ARG TARGETOS
+ARG TARGETARCH
+
 RUN sudo apt-get update -y \
     && sudo apt-get install -y --no-install-recommends \
         # packages in actions-runner-controller/runner-22.04
@@ -31,8 +34,15 @@ RUN sudo apt-get update -y \
 # keep /var/lib/apt/lists to reduce time of apt-get update in a job
 
 # some setup actions store cache into /opt/hostedtoolcache
+ENV RUNNER_TOOL_CACHE /opt/hostedtoolcache
 RUN sudo mkdir /opt/hostedtoolcache \
     && sudo chown runner:docker /opt/hostedtoolcache
+
+# Pre-install Node.js for actions/setup-node
+COPY hostedtoolcache/ /tmp/hostedtoolcache/
+RUN cd /tmp/hostedtoolcache \
+    && TARGETARCH="${TARGETARCH}" TARGETOS="${TARGETOS}" bash actions-setup-node.sh \
+    && sudo rm -fr /tmp/hostedtoolcache
 
 COPY entrypoint.sh /
 
