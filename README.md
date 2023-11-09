@@ -4,7 +4,7 @@ This is a container image of [actions/runner](https://github.com/actions/runner)
 
 ## Purpose
 
-We extend the Dockerfile of actions/runner to solve the following issues:
+We extend the official image to solve the following issues:
 
 - ~We need to run a job on both amd64 and arm64 nodes.
   This repository provides a multi-architectures image.
@@ -14,6 +14,8 @@ We extend the Dockerfile of actions/runner to solve the following issues:
 - ~We need to use [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) but it does not support Debian.
   This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))~ (resolved by [actions/runner#2651](https://github.com/actions/runner/pull/2651))
 - We need some essential packages such as `git`
+- Support Ubuntu 20.04 runner for backward compatibility
+- Add a hosted tool cache for actions/setup-node ([#160](https://github.com/quipper/actions-runner/pull/160))
 
 We are looking for the official supports, but need to maintain our custom image for now.
 
