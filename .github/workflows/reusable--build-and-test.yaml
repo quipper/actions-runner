@@ -76,6 +76,11 @@ jobs:
 
   e2e-test:
     needs: build
+    concurrency:
+      # When multiple actions-runner-controller are running at the same time,
+      # a runner registration is eventually deleted.
+      # For now, run the e2e-test sequentially.
+      group: e2e-test
     uses: ./.github/workflows/reusable--e2e-test.yaml
     secrets: inherit
     with:
