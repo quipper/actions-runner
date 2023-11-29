@@ -35,20 +35,26 @@ on:
         description: tags passed to docker/metadata-action (optional)
 
 jobs:
-  runner:
-    uses: ./.github/workflows/reusable--build-and-test.yaml
-    secrets: inherit
+  build:
+    uses: ./.github/workflows/reusable--build.yaml
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
-      runner-name: runner-${{ github.run_id }}
 
-  runner-ubuntu20:
-    uses: ./.github/workflows/reusable--build-and-test.yaml
-    secrets: inherit
+  build-ubuntu20:
+    uses: ./.github/workflows/reusable--build.yaml
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
       file: Dockerfile.ubuntu20
       flavor: suffix=-ubuntu20
-      runner-name: runner-ubuntu20-${{ github.run_id }}
+
+  e2e-test:
+    needs:
+      - build
+      - build-ubuntu20
+    uses: ./.github/workflows/reusable--e2e-test.yaml
+    secrets: inherit
+    with:
+      runner-image-uri: ${{ needs.build.outputs.image-uri }}
+      runner-ubuntu20-image-uri: ${{ needs.build-ubuntu20.outputs.image-uri }}

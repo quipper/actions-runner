@@ -6,11 +6,11 @@ on:
       runner-image-uri:
         type: string
         required: true
-        description: image URI of runner
-      runner-name:
+        description: Image URI of runner
+      runner-ubuntu20-image-uri:
         type: string
         required: true
-        description: runner name
+        description: Image URI of runner (ubuntu20)
 
 jobs:
   controller:
@@ -28,73 +28,28 @@ jobs:
       - run: make cluster
       - run: make deploy
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-name }}
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
+          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri}}
+          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+          ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make wait-for-job
+        env:
+          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
+          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
       - run: make undeploy
         if: always()
       - run: make logs
         if: always()
 
-  runner:
-    runs-on: ${{ inputs.runner-name }}
-    timeout-minutes: 10
-    services:
-      http:
-        image: nginx:stable
-        ports:
-          - 8080:80
-    steps:
-      - run: uname -a
-      - run: cat /etc/os-release
+  test:
+    uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
+    with:
+      runner-name: e2e-${{ github.run_id }}
 
-      # Test checkout
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-
-      # Test dockerd
-      - run: docker version
-      - run: docker run -v "$PWD:/workspace" --rm debian:stable ls -l /workspace/README.md
-      - uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
-      - uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56 # v5.1.0
-        with:
-          push: false
-          context: e2e-test
-          file: e2e-test/fixture.dockerfile
-
-      # Test setup actions
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3
-      - run: ruby --version
-      - run: gem --version
-      - uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
-        with:
-          python-version: 3
-      - run: python --version
-
-      # Test service container
-      - run: curl -sf http://localhost:8080
-
-      # Test the hosted tool cache
-      - run: |
-          export PATH="$PATH:/home/runner/externals/node20/bin"
-          npm install @actions/tool-cache
-      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const assert = require('assert')
-            const fs = require('fs')
-            const tc = require('@actions/tool-cache')
-            const expectedVersion = fs.readFileSync('hostedtoolcache/.node-version').toString().trim()
-            core.info(`expectedVersion = ${JSON.stringify(expectedVersion)}`)
-            const versions = tc.findAllVersions('node')
-            core.info(`versions = ${JSON.stringify(versions)}`)
-            assert.strictEqual(versions.length, 1)
-            assert.strictEqual(versions[0], expectedVersion)
-      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
-        with:
-          node-version-file: hostedtoolcache/.node-version
-      - run: node --version
+  test-ubuntu20:
+    uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
+    with:
+      runner-name: e2e-ubuntu20-${{ github.run_id }}
