@@ -30,5 +30,24 @@ releases:
                 securityContext:
                   privileged: true
 
+  - needs: [arc-systems/arc]
+    name: {{ requiredEnv "ARC_RUNNER_UBUNTU20_NAME" | quote }}
+    namespace: arc-runners
+    chart: actions-runner-controller-charts/gha-runner-scale-set
+    version: 0.7.0
+    values:
+      - githubConfigUrl: https://github.com/{{ requiredEnv "GITHUB_REPOSITORY" }}
+        githubConfigSecret:
+          github_app_id: {{ requiredEnv "APP_ID" | quote }}
+          github_app_installation_id: {{ requiredEnv "APP_INSTALLATION_ID" | quote }}
+          github_app_private_key: {{ requiredEnv "APP_PRIVATE_KEY" | quote }}
+        template:
+          spec:
+            containers:
+              - name: runner
+                image: {{ requiredEnv "ARC_RUNNER_UBUNTU20_IMAGE_URI" | quote }}
+                securityContext:
+                  privileged: true
+
 helmDefaults:
   wait: true

@@ -1,4 +1,4 @@
-name: build-and-test
+name: build
 
 on:
   workflow_call:
@@ -23,10 +23,6 @@ on:
         type: string
         required: false
         description: flavor passed to docker/metadata-action
-      runner-name:
-        type: string
-        required: true
-        description: runner name
     outputs:
       image-uri:
         value: ${{ jobs.build.outputs.image-uri }}
@@ -73,16 +69,3 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-
-  e2e-test:
-    needs: build
-    concurrency:
-      # When multiple actions-runner-controller are running at the same time,
-      # a runner registration is eventually deleted.
-      # For now, run the e2e-test sequentially.
-      group: e2e-test
-    uses: ./.github/workflows/reusable--e2e-test.yaml
-    secrets: inherit
-    with:
-      runner-image-uri: ${{ needs.build.outputs.image-uri }}
-      runner-name: ${{ inputs.runner-name }}
