@@ -37,14 +37,12 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/reusable--build.yaml
-    secrets: inherit
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
 
   build-ubuntu20:
     uses: ./.github/workflows/reusable--build.yaml
-    secrets: inherit
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
@@ -56,6 +54,7 @@ jobs:
       - build
       - build-ubuntu20
     uses: ./.github/workflows/reusable--e2e-test.yaml
+    secrets: inherit
     with:
       runner-image-uri: ${{ needs.build.outputs.image-uri }}
       runner-ubuntu20-image-uri: ${{ needs.build-ubuntu20.outputs.image-uri }}
