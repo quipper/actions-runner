@@ -33,20 +33,18 @@ RUN sudo apt-get update -y \
 
 # keep /var/lib/apt/lists to reduce time of apt-get update in a job
 
-# some setup actions store cache into /opt/hostedtoolcache
-ENV RUNNER_TOOL_CACHE /opt/hostedtoolcache
-RUN sudo mkdir /opt/hostedtoolcache \
-    && sudo chown runner:docker /opt/hostedtoolcache
-
 # Pre-install Node.js for actions/setup-node
-COPY hostedtoolcache/ /tmp/hostedtoolcache/
-RUN cd /tmp/hostedtoolcache \
-    && TARGETARCH="${TARGETARCH}" TARGETOS="${TARGETOS}" bash actions-setup-node.sh \
-    && sudo rm -fr /tmp/hostedtoolcache
+COPY hostedtoolcache/ /assets/hostedtoolcache/
+RUN cd /assets/hostedtoolcache \
+    && TARGETARCH="${TARGETARCH}" TARGETOS="${TARGETOS}" bash actions-setup-node.sh
 
 COPY entrypoint.sh /
 
 VOLUME /var/lib/docker
+VOLUME /opt/hostedtoolcache
+
+# some setup actions store cache into /opt/hostedtoolcache
+ENV RUNNER_TOOL_CACHE /opt/hostedtoolcache
 
 # some setup actions depend on ImageOS variable
 # https://github.com/actions/runner-images/issues/345
