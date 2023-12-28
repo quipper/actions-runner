@@ -5,10 +5,10 @@ on:
     paths:
       - .github/workflows/release.yaml
       - .github/workflows/build.yaml
-      - .github/workflows/reusable--build-and-test.yaml
-      - .github/workflows/reusable--e2e-test.yaml
+      - .github/workflows/reusable--*.yaml
       - Dockerfile
       - Dockerfile.*
+      - hostedtoolcache/**
       - hack/**
   push:
     branches:
@@ -16,10 +16,10 @@ on:
     paths:
       - .github/workflows/release.yaml
       - .github/workflows/build.yaml
-      - .github/workflows/reusable--build-and-test.yaml
-      - .github/workflows/reusable--e2e-test.yaml
+      - .github/workflows/reusable--*.yaml
       - Dockerfile
       - Dockerfile.*
+      - hostedtoolcache/**
       - hack/**
 
 jobs:
