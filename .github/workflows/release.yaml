@@ -41,4 +41,5 @@ jobs:
       - run: bash hack/create-release-if-not-exists.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Trigger the build workflow against the new release
           RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
