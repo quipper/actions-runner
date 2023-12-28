@@ -23,37 +23,22 @@ on:
       - hack/**
 
 jobs:
-  # When the runner version is updated by Renovate,
-  # create a new release.
+  # When Renovate has updated the version of actions/runner,
+  # automatically create a new release into GitHub Releases.
   create-release-if-not-exists:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
+      - uses: actions/create-github-app-token@v1.6.2
+        id: release-token
+        with:
+          app-id: ${{ secrets.E2E_TEST_APP_ID }}
+          private-key: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: bash hack/create-release-if-not-exists.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Since GITHUB_TOKEN does not trigger the workflow,
-  # we need to manually build a new release.
-  get-latest-release:
-    if: github.event_name == 'push'
-    needs: create-release-if-not-exists
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    outputs:
-      tag: ${{ steps.latest-release.outputs.tag }}
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - run: echo "tag=$(gh release view --json tagName --jq .tagName)" >> "$GITHUB_OUTPUT"
-        id: latest-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-latest-release:
-    needs: get-latest-release
-    uses: ./.github/workflows/build.yaml
-    secrets: inherit
-    with:
-      context: https://github.com/${{ github.repository }}.git#${{ needs.get-latest-release.outputs.tag }}
-      tags: ${{ needs.get-latest-release.outputs.tag }}
+          RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}

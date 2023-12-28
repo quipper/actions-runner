@@ -24,4 +24,4 @@ if gh release view "$actions_runner_version"; then
 fi
 
 # create a release if not exists
-gh release create "$actions_runner_version" --generate-notes
+GITHUB_TOKEN="$RELEASE_TOKEN" gh release create "$actions_runner_version" --generate-notes
