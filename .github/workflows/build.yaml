@@ -4,21 +4,21 @@ on:
   pull_request:
     paths:
       - .github/workflows/build.yaml
-      - .github/workflows/reusable--build-and-test.yaml
-      - .github/workflows/reusable--e2e-test.yaml
+      - .github/workflows/reusable--*.yaml
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
       - e2e-test/**
+      - hostedtoolcache/**
   push:
     paths:
       - .github/workflows/build.yaml
-      - .github/workflows/reusable--build-and-test.yaml
-      - .github/workflows/reusable--e2e-test.yaml
+      - .github/workflows/reusable--*.yaml
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
       - e2e-test/**
+      - hostedtoolcache/**
     branches:
       - main
     tags:
