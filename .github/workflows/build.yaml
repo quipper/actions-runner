@@ -37,12 +37,18 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/reusable--build.yaml
+    permissions:
+      contents: read
+      packages: write
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
 
   build-ubuntu20:
     uses: ./.github/workflows/reusable--build.yaml
+    permissions:
+      contents: read
+      packages: write
     with:
       context: ${{ inputs.context }}
       tags: ${{ inputs.tags }}
