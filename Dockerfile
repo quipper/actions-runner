@@ -23,7 +23,8 @@ RUN sudo apt-get update -y \
         libyaml-dev \
         # dockerd dependencies
         tini \
-        iptables
+        iptables \
+        gh
 
 # KEEP LESS PACKAGES:
 # We'd like to keep this image small for maintanability and security.
