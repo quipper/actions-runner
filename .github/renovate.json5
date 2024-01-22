@@ -34,10 +34,5 @@
       ],
       "groupName": "actions-runner-controller-charts",
     },
-    {
-      "description": "TODO: enable automerge when it becomes stable",
-      "matchPackageNames": ["actions/runner"],
-      "automerge": false,
-    },
   ]
 }
