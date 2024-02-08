@@ -23,7 +23,9 @@ RUN sudo apt-get update -y \
         libyaml-dev \
         # dockerd dependencies
         tini \
-        iptables
+        iptables \
+        # firefox dependencies
+        libgtk-3-0
 
 # KEEP LESS PACKAGES:
 # We'd like to keep this image small for maintanability and security.
