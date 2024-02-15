@@ -1,2 +1,2 @@
-Dockerfile @quipper/sre
-entrypoint.sh @quipper/sre
+Dockerfile @quipper/sre-actions-runner
+entrypoint.sh @quipper/sre-actions-runner
