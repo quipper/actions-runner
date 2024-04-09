@@ -14,8 +14,7 @@ deploy:
 
 .PHONY: wait-for-job
 wait-for-job:
-	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
-	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
+	while true; do kubectl get pods -n arc-runners -oyaml; sleep 10; done
 	kubectl get pods -n arc-runners
 	-kubectl logs -n arc-runners -l app.kubernetes.io/component=runner --tail=-1 -f
 
