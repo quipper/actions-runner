@@ -6,6 +6,7 @@ cluster:
 	kind create cluster --name arc-cluster
 	kubectl version
 
+# Use bash variable expansion to avoid exposing the secrets
 .PHONY: create-github-config-secret
 create-github-config-secret:
 	kubectl create namespace arc-runners
