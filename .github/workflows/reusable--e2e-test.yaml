@@ -26,15 +26,17 @@ jobs:
           aqua_version: v2.27.0
           working_directory: e2e-test
       - run: make cluster
+      - run: make create-github-config-secret
+        env:
+          APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
+          APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make deploy
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri}}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
-          APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
-          APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make wait-for-job
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
