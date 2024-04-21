@@ -10,9 +10,9 @@ cluster:
 create-github-config-secret:
 	kubectl create namespace arc-runners
 	kubectl create secret generic github-config -n arc-runners \
-		"--from-literal=github_app_id=\${APP_ID}" \
-		"--from-literal=github_app_installation_id=\${APP_INSTALLATION_ID}" \
-		"--from-literal=github_app_private_key=\${APP_PRIVATE_KEY}"
+		"--from-literal=github_app_id=$${APP_ID}" \
+		"--from-literal=github_app_installation_id=$${APP_INSTALLATION_ID}" \
+		"--from-literal=github_app_private_key=$${APP_PRIVATE_KEY}"
 
 .PHONY: deploy
 deploy:
