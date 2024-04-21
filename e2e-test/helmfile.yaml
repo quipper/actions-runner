@@ -18,10 +18,7 @@ releases:
     version: 0.9.0
     values:
       - githubConfigUrl: 'https://github.com/{{ requiredEnv "GITHUB_REPOSITORY" }}'
-        githubConfigSecret:
-          github_app_id: '{{ requiredEnv "APP_ID" }}'
-          github_app_installation_id: '{{ requiredEnv "APP_INSTALLATION_ID" }}'
-          github_app_private_key: '{{ requiredEnv "APP_PRIVATE_KEY" }}'
+        githubConfigSecret: github-config
         template:
           spec:
             containers:
@@ -37,10 +34,7 @@ releases:
     version: 0.9.0
     values:
       - githubConfigUrl: 'https://github.com/{{ requiredEnv "GITHUB_REPOSITORY" }}'
-        githubConfigSecret:
-          github_app_id: '{{ requiredEnv "APP_ID" }}'
-          github_app_installation_id: '{{ requiredEnv "APP_INSTALLATION_ID" }}'
-          github_app_private_key: '{{ requiredEnv "APP_PRIVATE_KEY" }}'
+        githubConfigSecret: github-config
         template:
           spec:
             containers:
