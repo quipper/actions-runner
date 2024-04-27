@@ -15,7 +15,7 @@ We extend the official image to solve the following issues:
   This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))~ (resolved by [actions/runner#2651](https://github.com/actions/runner/pull/2651))
 - We need some essential packages such as `git`
 - Support Ubuntu 20.04 runner for backward compatibility
-- Add a hosted tool cache for actions/setup-node ([#160](https://github.com/quipper/actions-runner/pull/160))
+- ~Add a hosted tool cache for actions/setup-node ([#160](https://github.com/quipper/actions-runner/pull/160))~ (resolved by [actions/setup-node#857](https://github.com/actions/setup-node/issues/857))
 
 We are looking for the official supports, but need to maintain our custom image for now.
 

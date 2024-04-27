@@ -38,12 +38,6 @@ ENV RUNNER_TOOL_CACHE /opt/hostedtoolcache
 RUN sudo mkdir /opt/hostedtoolcache \
     && sudo chown runner:docker /opt/hostedtoolcache
 
-# Pre-install Node.js for actions/setup-node
-COPY hostedtoolcache/ /tmp/hostedtoolcache/
-RUN cd /tmp/hostedtoolcache \
-    && TARGETARCH="${TARGETARCH}" TARGETOS="${TARGETOS}" bash actions-setup-node.sh \
-    && sudo rm -fr /tmp/hostedtoolcache
-
 COPY entrypoint.sh /
 
 VOLUME /var/lib/docker

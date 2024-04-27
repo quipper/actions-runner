@@ -40,31 +40,16 @@ jobs:
           ruby-version: 3
       - run: ruby --version
       - run: gem --version
+
       - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
         with:
           python-version: 3
       - run: python --version
 
-      # Test service container
-      - run: curl -sf http://localhost:8080
-
-      # Test the hosted tool cache
-      - run: |
-          export PATH="$PATH:/home/runner/externals/node20/bin"
-          npm install @actions/tool-cache
-      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const assert = require('assert')
-            const fs = require('fs')
-            const tc = require('@actions/tool-cache')
-            const expectedVersion = fs.readFileSync('hostedtoolcache/.node-version').toString().trim()
-            core.info(`expectedVersion = ${JSON.stringify(expectedVersion)}`)
-            const versions = tc.findAllVersions('node')
-            core.info(`versions = ${JSON.stringify(versions)}`)
-            assert.strictEqual(versions.length, 1)
-            assert.strictEqual(versions[0], expectedVersion)
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version-file: hostedtoolcache/.node-version
+          node-version: 20
       - run: node --version
+
+      # Test service container
+      - run: curl -sf http://localhost:8080
