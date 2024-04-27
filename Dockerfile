@@ -22,7 +22,6 @@ RUN sudo apt-get update -y \
         # https://github.com/ruby/setup-ruby#using-self-hosted-runners
         libyaml-dev \
         # dockerd dependencies
-        tini \
         iptables
 
 # KEEP LESS PACKAGES:
@@ -46,11 +45,11 @@ VOLUME /var/lib/docker
 # https://github.com/actions/runner-images/issues/345
 ENV ImageOS=ubuntu22
 
-# tini sends the signal to children
+# docker-init sends the signal to children
 ENV RUNNER_MANUALLY_TRAP_SIG=
 
 # disable the log by default, because it is too large
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/docker-init", "--", "/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]
