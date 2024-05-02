@@ -2,5 +2,5 @@ registries:
   - type: standard
     ref: v4.169.0 # renovate: depName=aquaproj/aqua-registry
 packages:
-  - name: helmfile/helmfile@v0.163.1
+  - name: helmfile/helmfile@v0.164.0
   - name: helm/helm@v3.14.4
