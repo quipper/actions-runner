@@ -24,7 +24,6 @@ RUN apt-get update -y \
         # https://github.com/ruby/setup-ruby#using-self-hosted-runners
         libyaml-dev \
         # dockerd dependencies
-        tini \
         iptables
 
 # KEEP LESS PACKAGES:
@@ -78,5 +77,5 @@ VOLUME /var/lib/docker
 ENV ImageOS=ubuntu20
 
 USER runner
-ENTRYPOINT ["/usr/bin/tini", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/docker-init", "--", "/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]

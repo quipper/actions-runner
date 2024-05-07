@@ -10,7 +10,7 @@ We extend the official image to solve the following issues:
   This repository provides a multi-architectures image.
   ([community#56720](https://github.com/orgs/community/discussions/56720))~ (resolved by [actions/runner#2601](https://github.com/actions/runner/pull/2601))
 - We would like to run both runner and Dockerd in same container for the resource efficiency of Kubernetes nodes.
-  This image starts Dockerd under [tini](https://github.com/krallin/tini).
+  This image starts Dockerd under docker-init.
 - ~We need to use [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) but it does not support Debian.
   This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))~ (resolved by [actions/runner#2651](https://github.com/actions/runner/pull/2651))
 - We need some essential packages such as `git`
