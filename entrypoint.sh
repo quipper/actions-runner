@@ -1,3 +1,3 @@
 #!/bin/bash
-sudo /usr/bin/dockerd &
+sudo /usr/bin/dockerd --log-level warn &
 exec "$@"
