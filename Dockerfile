@@ -1,4 +1,4 @@
-ARG RUNNER_VERSION=2.316.1
+ARG RUNNER_VERSION=2.317.0
 
 # extends https://github.com/actions/runner/blob/main/images/Dockerfile
 FROM ghcr.io/actions/actions-runner:${RUNNER_VERSION}
