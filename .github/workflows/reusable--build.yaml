@@ -23,6 +23,15 @@ on:
         type: string
         required: false
         description: flavor passed to docker/metadata-action
+      push:
+        type: boolean
+        required: false
+        default: true
+        description: push passed to docker/build-push-action
+      disable-build-cache:
+        type: boolean
+        required: false
+        description: Set true to disable the build cache
     outputs:
       image-uri:
         value: ${{ jobs.build.outputs.image-uri }}
@@ -48,7 +57,8 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: ${{ inputs.tags }}
           flavor: ${{ inputs.flavor }}
-      - uses: int128/docker-build-cache-config-action@0b4582921757b6145fd7fab8156c725b28e1c2b8 # v1.31.0
+      - if: !inputs.disable-build-cache
+        uses: int128/docker-build-cache-config-action@0b4582921757b6145fd7fab8156c725b28e1c2b8 # v1.31.0
         id: cache
         with:
           image: ghcr.io/${{ github.repository }}/cache
@@ -60,7 +70,7 @@ jobs:
         with:
           context: ${{ inputs.context }}
           file: ${{ inputs.file }}
-          push: true
+          push: ${{ inputs.push }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: ${{ steps.cache.outputs.cache-from }}
