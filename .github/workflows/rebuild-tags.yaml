@@ -24,7 +24,7 @@ jobs:
       contents: read
       packages: write
     with:
-      context: ${{ github.server_url }}/${{ github.repository }}#refs/tags/${{ matrix.tag }}
+      context: ${{ github.server_url }}/${{ github.repository }}.git#refs/tags/${{ matrix.tag }}
       tags: ${{ matrix.tag }}
       push: ${{ github.event_name != 'pull_request' }}
       disable-build-cache: true
@@ -40,7 +40,7 @@ jobs:
       contents: read
       packages: write
     with:
-      context: ${{ github.server_url }}/${{ github.repository }}#refs/tags/${{ matrix.tag }}
+      context: ${{ github.server_url }}/${{ github.repository }}.git#refs/tags/${{ matrix.tag }}
       tags: ${{ matrix.tag }}
       file: Dockerfile.ubuntu20
       flavor: suffix=-ubuntu20
