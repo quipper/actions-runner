@@ -57,7 +57,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: ${{ inputs.tags }}
           flavor: ${{ inputs.flavor }}
-      - if: !inputs.disable-build-cache
+      - if: inputs.disable-build-cache != true
         uses: int128/docker-build-cache-config-action@0b4582921757b6145fd7fab8156c725b28e1c2b8 # v1.31.0
         id: cache
         with:
