@@ -23,7 +23,7 @@ RUN sudo apt-get update -y \
         libyaml-dev \
         # dockerd dependencies
         iptables \
-    && rm -rf /var/lib/apt/lists/*
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # KEEP LESS PACKAGES:
 # We'd like to keep this image small for maintanability and security.
