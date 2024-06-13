@@ -8,8 +8,8 @@ on:
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
+      - entrypoint.d/**
       - e2e-test/**
-      - hostedtoolcache/**
   push:
     paths:
       - .github/workflows/build.yaml
@@ -17,8 +17,8 @@ on:
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
+      - entrypoint.d/**
       - e2e-test/**
-      - hostedtoolcache/**
     branches:
       - main
     tags:

@@ -22,7 +22,8 @@ RUN sudo apt-get update -y \
         # https://github.com/ruby/setup-ruby#using-self-hosted-runners
         libyaml-dev \
         # dockerd dependencies
-        iptables
+        iptables \
+    && rm -rf /var/lib/apt/lists/*
 
 # KEEP LESS PACKAGES:
 # We'd like to keep this image small for maintanability and security.
@@ -30,14 +31,13 @@ RUN sudo apt-get update -y \
 # https://github.com/actions/actions-runner-controller/pull/2050
 # https://github.com/actions/actions-runner-controller/blob/master/runner/actions-runner.ubuntu-22.04.dockerfile
 
-# keep /var/lib/apt/lists to reduce time of apt-get update in a job
-
 # some setup actions store cache into /opt/hostedtoolcache
 ENV RUNNER_TOOL_CACHE /opt/hostedtoolcache
 RUN sudo mkdir /opt/hostedtoolcache \
     && sudo chown runner:docker /opt/hostedtoolcache
 
 COPY entrypoint.sh /
+COPY entrypoint.d/ /entrypoint.d/
 
 VOLUME /var/lib/docker
 
