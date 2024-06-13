@@ -7,17 +7,19 @@ on:
       - .github/workflows/reusable--*.yaml
       - Dockerfile
       - Dockerfile.*
+      - entrypoint.sh
+      - entrypoint.d/**
       - hack/**
   push:
     branches:
       - main
     paths:
       - .github/workflows/release.yaml
-      - .github/workflows/build.yaml
       - .github/workflows/reusable--*.yaml
       - Dockerfile
       - Dockerfile.*
-      - hostedtoolcache/**
+      - entrypoint.sh
+      - entrypoint.d/**
       - hack/**
 
 jobs:

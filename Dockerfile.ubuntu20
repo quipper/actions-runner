@@ -68,6 +68,7 @@ RUN mkdir /opt/hostedtoolcache \
     && chown runner:docker /opt/hostedtoolcache
 
 COPY entrypoint.sh /
+COPY entrypoint.d/ /entrypoint.d/
 
 VOLUME /var/lib/docker
 

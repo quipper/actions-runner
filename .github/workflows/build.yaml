@@ -8,6 +8,7 @@ on:
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
+      - entrypoint.d/**
       - e2e-test/**
   push:
     paths:
@@ -16,8 +17,8 @@ on:
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
+      - entrypoint.d/**
       - e2e-test/**
-      - hostedtoolcache/**
     branches:
       - main
     tags:
