@@ -4,6 +4,7 @@ set -eu -o pipefail
 
 ubuntu_release="$(lsb_release -cs || true)"
 
+# Set a timeout to avoid hanging if the IMDSv2 endpoint is not available.
 aws_imds_token="$(curl -s --max-time 0.5 -X PUT http://169.254.169.254/latest/api/token -H 'X-aws-ec2-metadata-token-ttl-seconds: 30' || true)"
 
 get_aws_region () {
