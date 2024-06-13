@@ -9,7 +9,6 @@ on:
       - Dockerfile.*
       - entrypoint.sh
       - e2e-test/**
-      - hostedtoolcache/**
   push:
     paths:
       - .github/workflows/build.yaml

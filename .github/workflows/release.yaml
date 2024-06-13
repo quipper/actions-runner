@@ -4,11 +4,9 @@ on:
   pull_request:
     paths:
       - .github/workflows/release.yaml
-      - .github/workflows/build.yaml
       - .github/workflows/reusable--*.yaml
       - Dockerfile
       - Dockerfile.*
-      - hostedtoolcache/**
       - hack/**
   push:
     branches:
