@@ -1,4 +1,4 @@
 #!/bin/bash
-sudo find /entrypoint.d -type f -name '*.sh' -exec bash {} \;
+sudo bash /entrypoint.d/modify-apt-sources.sh
 sudo /usr/bin/dockerd --log-level warn &
 exec "$@"
