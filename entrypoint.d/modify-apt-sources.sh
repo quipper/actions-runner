@@ -17,12 +17,8 @@ ubuntu_release="$(lsb_release -cs || true)"
 platform="$(uname -m)"
 echo "Running on Ubuntu ${ubuntu_release} ${platform}" >&2
 
-if [[ -z "${aws_imds_token}" ]]; then
-  exit
-fi
-
-if [[ $ubuntu_release == jammy && $platform == x86_64 ]]; then
-  bash /entrypoint.d/modify-apt-sources-jammy-x86_64.sh "$(get_aws_region)"
-elif [[ $ubuntu_release == jammy && $platform == aarch64 ]]; then
-  bash /entrypoint.d/modify-apt-sources-jammy-aarch64.sh "$(get_aws_availability_zone)"
+if [[ -n "$aws_imds_token" && $ubuntu_release == jammy && $platform == x86_64 ]]; then
+  bash /entrypoint.d/modify-apt-sources-aws-jammy-x86_64.sh "$(get_aws_region)"
+elif [[ -n "$aws_imds_token" && $ubuntu_release == jammy && $platform == aarch64 ]]; then
+  bash /entrypoint.d/modify-apt-sources-aws-jammy-aarch64.sh "$(get_aws_availability_zone)"
 fi

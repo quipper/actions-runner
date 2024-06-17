@@ -16,7 +16,7 @@ on:
 
 jobs:
   modify-apt-sources-jammy-x86_64:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04 # jammy
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -29,7 +29,11 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
-      - run: docker run --rm -q --platform linux/arm64 -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" ubuntu:jammy bash -eu -c "$script"
+      # Test the script with qemu, because GitHub Actions does not support Arm for now
+      - run: |
+          docker run --rm -q --platform linux/arm64 \
+            -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE:ro" -w "$GITHUB_WORKSPACE" \
+            ubuntu:jammy bash -eu -c "$script"
         env:
           script: |
             bash entrypoint.d/modify-apt-sources-jammy-aarch64.sh us-east-1a

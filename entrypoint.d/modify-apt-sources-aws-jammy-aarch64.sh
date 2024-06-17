@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu -o pipefail
 aws_availability_zone="$1"
-echo "Modifying /etc/apt/sources.list for jammy aarch64 on ${aws_availability_zone}" >&2
+echo "Modifying /etc/apt/sources.list for jammy aarch64 on AWS ${aws_availability_zone}" >&2
 cat > /etc/apt/sources.list <<EOF
 deb http://${aws_availability_zone}.clouds.ports.ubuntu.com/ubuntu-ports/ jammy main restricted
 deb http://${aws_availability_zone}.clouds.ports.ubuntu.com/ubuntu-ports/ jammy-updates main restricted
