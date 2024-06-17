@@ -25,13 +25,13 @@
   "packageRules": [
     {
       "description": "Disable docker because regexManager updates it",
-      "matchPackageNames": ["ghcr.io/actions/actions-runner"],
+      "matchDepNames": ["ghcr.io/actions/actions-runner"],
       "matchDatasources": ["docker"],
       "enabled": false,
     },
     {
       "description": "Group actions-runner-controller charts",
-      "matchPackageNames": [
+      "matchDepNames": [
         "gha-runner-scale-set-controller",
         "gha-runner-scale-set",
       ],
