@@ -1,0 +1,32 @@
+name: entrypoint / test
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/entrypoint--test.yaml
+      - entrypoint.sh
+      - entrypoint.d/**
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/entrypoint--test.yaml
+      - entrypoint.sh
+      - entrypoint.d/**
+
+jobs:
+  modify-apt-sources-jammy-x86_64:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - run: sudo bash entrypoint.d/modify-apt-sources-jammy-x86_64.sh us-east-1
+      - run: sudo apt-get update
+
+  modify-apt-sources-jammy-aarch64:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - run: sudo bash entrypoint.d/modify-apt-sources-jammy-aarch64.sh us-east-1a
+      - run: sudo apt-get update
