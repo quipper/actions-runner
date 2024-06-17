@@ -15,15 +15,15 @@ on:
       - entrypoint.d/**
 
 jobs:
-  modify-apt-sources-jammy-x86_64:
+  modify-apt-sources-aws-jammy-x86_64:
     runs-on: ubuntu-22.04 # jammy
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - run: sudo bash entrypoint.d/modify-apt-sources-jammy-x86_64.sh us-east-1
+      - run: sudo bash entrypoint.d/modify-apt-sources-aws-jammy-x86_64.sh us-east-1
       - run: sudo apt-get update
 
-  modify-apt-sources-jammy-aarch64:
+  modify-apt-sources-aws-jammy-aarch64:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -36,5 +36,5 @@ jobs:
             ubuntu:jammy bash -eu -c "$script"
         env:
           script: |
-            bash entrypoint.d/modify-apt-sources-jammy-aarch64.sh us-east-1a
+            bash entrypoint.d/modify-apt-sources-aws-jammy-aarch64.sh us-east-1a
             apt-get update
