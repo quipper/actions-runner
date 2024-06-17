@@ -13,8 +13,8 @@ get_aws_availability_zone () {
   curl -sf -H "X-aws-ec2-metadata-token: $aws_imds_token" http://169.254.169.254/latest/meta-data/placement/availability-zone
 }
 
-local ubuntu_release="$(lsb_release -cs || true)"
-local platform="$(uname -m)"
+ubuntu_release="$(lsb_release -cs || true)"
+platform="$(uname -m)"
 echo "Running on Ubuntu ${ubuntu_release} ${platform}" >&2
 
 if [[ -z "${aws_imds_token}" ]]; then
