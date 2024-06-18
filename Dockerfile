@@ -41,10 +41,6 @@ COPY entrypoint.d/ /entrypoint.d/
 
 VOLUME /var/lib/docker
 
-# some setup actions depend on ImageOS variable
-# https://github.com/actions/runner-images/issues/345
-ENV ImageOS=ubuntu22
-
 # docker-init sends the signal to children
 ENV RUNNER_MANUALLY_TRAP_SIG=
 
