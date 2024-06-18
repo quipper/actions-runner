@@ -7,6 +7,10 @@ on:
         type: string
         required: true
         description: Name of runner
+      expected-image-os:
+        type: string
+        required: true
+        description: Expected value of $ImageOS
 
 jobs:
   runner:
@@ -20,6 +24,9 @@ jobs:
     steps:
       - run: uname -a
       - run: cat /etc/os-release
+      - run: test "$ImageOS" = "$expected_image_os"
+        env:
+          expected_image_os: ${{ inputs.expected-image-os }}
 
       # Test checkout
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
