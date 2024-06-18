@@ -23,6 +23,8 @@ RUN sudo apt-get update -y \
         libyaml-dev \
         # dockerd dependencies
         iptables \
+    # Remove the extra repository to reduce time of apt-get update
+    && sudo add-apt-repository -r ppa:git-core/ppa \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # KEEP LESS PACKAGES:

@@ -60,3 +60,7 @@ jobs:
 
       # Test service container
       - run: curl -sf http://localhost:8080
+
+      # Test apt
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y --no-install-recommends fonts-noto
