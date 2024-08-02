@@ -76,6 +76,9 @@ VOLUME /var/lib/docker
 # https://github.com/actions/runner-images/issues/345
 ENV ImageOS=ubuntu20
 
+# Align to GitHub-hosted runners (ubuntu-latest)
+ENV LANG=C.UTF-8
+
 USER runner
 ENTRYPOINT ["/usr/bin/docker-init", "--", "/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]
