@@ -1,4 +1,4 @@
-FROM debian:stable as builder
+FROM debian:stable AS builder
 WORKDIR /workspace
 COPY Makefile /workspace
 RUN test -s Makefile
