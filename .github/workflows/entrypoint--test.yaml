@@ -16,7 +16,7 @@ on:
 
 jobs:
   modify-apt-sources-aws-jammy-x86_64:
-    runs-on: ubuntu-22.04 # jammy
+    runs-on: ubuntu-24.04 # jammy
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
