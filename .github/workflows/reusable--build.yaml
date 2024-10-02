@@ -48,7 +48,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: ${{ inputs.tags }}
           flavor: ${{ inputs.flavor }}
-      - uses: int128/docker-build-cache-config-action@7da12b64b43b704d7c938c144f8614c71912a691 # v1.33.0
+      - uses: int128/docker-build-cache-config-action@cba1967be5f85d32825c5aed214959a0d5c77754 # v1.34.0
         id: cache
         with:
           image: ghcr.io/${{ github.repository }}/cache
