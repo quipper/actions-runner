@@ -10,6 +10,11 @@ releases:
     namespace: arc-systems
     chart: actions-runner-controller-charts/gha-runner-scale-set-controller
     version: 0.9.3
+    values:
+      # https://github.com/int128/actions-runner-controller/pull/36
+      - image:
+          repository: ghcr.io/int128/actions-runner-controller
+          tag: pr-36
 
   - needs: [arc-systems/arc]
     name: '{{ requiredEnv "ARC_RUNNER_NAME" }}'
