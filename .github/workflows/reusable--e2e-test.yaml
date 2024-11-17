@@ -15,7 +15,7 @@ on:
 jobs:
   controller:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     defaults:
       run:
         working-directory: e2e-test
@@ -41,9 +41,11 @@ jobs:
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+      - run: make listener-logs
+        if: always()
       - run: make undeploy
         if: always()
-      - run: make logs
+      - run: make controller-logs
         if: always()
 
   test:
