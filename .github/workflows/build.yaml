@@ -8,7 +8,6 @@ on:
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
-      - entrypoint.d/**
       - e2e-test/**
   push:
     paths:
@@ -17,22 +16,11 @@ on:
       - Dockerfile
       - Dockerfile.*
       - entrypoint.sh
-      - entrypoint.d/**
       - e2e-test/**
     branches:
       - main
     tags:
       - '*'
-  workflow_call:
-    inputs:
-      context:
-        type: string
-        required: false
-        description: context passed to docker/build-push-action (optional)
-      tags:
-        type: string
-        required: false
-        description: tags passed to docker/metadata-action (optional)
 
 jobs:
   build:
@@ -40,9 +28,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    with:
-      context: ${{ inputs.context }}
-      tags: ${{ inputs.tags }}
 
   build-ubuntu20:
     uses: ./.github/workflows/reusable--build.yaml
@@ -50,8 +35,6 @@ jobs:
       contents: read
       packages: write
     with:
-      context: ${{ inputs.context }}
-      tags: ${{ inputs.tags }}
       file: Dockerfile.ubuntu20
       flavor: suffix=-ubuntu20
 
