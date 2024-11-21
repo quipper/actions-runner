@@ -33,6 +33,10 @@ wait-for-job:
 undeploy:
 	kubectl delete -n arc-runners --all AutoscalingRunnerSet
 
-.PHONY: logs
-logs:
+.PHONY: listener-logs
+listener-logs:
+	-kubectl logs -n arc-systems -l app.kubernetes.io/component=runner-scale-set-listener --tail=-1
+
+.PHONY: controller-logs
+controller-logs:
 	-kubectl logs -n arc-systems -l app.kubernetes.io/component=controller-manager --tail=-1
