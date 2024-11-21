@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-focal
+FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-focal@sha256:939d4408b41d8cca7d749716842456a9618e2964c866d634a466810f873e0bfa
 
 ARG TARGETOS
 ARG TARGETARCH
