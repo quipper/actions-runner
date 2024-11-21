@@ -34,7 +34,7 @@ jobs:
       - run: make deploy
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri}}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
       - run: make wait-for-job
