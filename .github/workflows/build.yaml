@@ -2,21 +2,7 @@ name: build
 
 on:
   pull_request:
-    paths:
-      - .github/workflows/build.yaml
-      - .github/workflows/reusable--*.yaml
-      - Dockerfile
-      - Dockerfile.*
-      - entrypoint.sh
-      - e2e-test/**
   push:
-    paths:
-      - .github/workflows/build.yaml
-      - .github/workflows/reusable--*.yaml
-      - Dockerfile
-      - Dockerfile.*
-      - entrypoint.sh
-      - e2e-test/**
     branches:
       - main
     tags:
