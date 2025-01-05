@@ -33,9 +33,9 @@ jobs:
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make deploy
         env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
+          ARC_RUNNER_NAME: actions-runner-${{ github.run_id }}-e2e
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+          ARC_RUNNER_UBUNTU20_NAME: actions-runner-${{ github.run_id }}-e2e-ubuntu20
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
       - run: make wait-for-job
         env:
@@ -51,11 +51,11 @@ jobs:
   test:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: e2e-${{ github.run_id }}
+      runner-name: actions-runner-${{ github.run_id }}-e2e
       expected-image-os: ubuntu22
 
   test-ubuntu20:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: e2e-ubuntu20-${{ github.run_id }}
+      runner-name: actions-runner-${{ github.run_id }}-e2e-ubuntu20
       expected-image-os: ubuntu20
