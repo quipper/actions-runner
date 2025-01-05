@@ -37,6 +37,10 @@ jobs:
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
+      - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+        with:
+          name: e2e-test-controller-ready
+          path: e2e-test/kubeconfig.yaml
       - run: make wait-for-job
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
@@ -48,13 +52,27 @@ jobs:
       - run: make controller-logs
         if: always()
 
+  wait-for-controller:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          set -x
+          until gh run download '${{ github.run_id }}' --name e2e-test-controller-ready; do
+            sleep 5
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   test:
+    needs: wait-for-controller
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
       runner-name: e2e-${{ github.run_id }}
       expected-image-os: ubuntu22
 
   test-ubuntu20:
+    needs: wait-for-controller
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
       runner-name: e2e-ubuntu20-${{ github.run_id }}
