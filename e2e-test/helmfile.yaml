@@ -9,13 +9,13 @@ releases:
   - name: arc
     namespace: arc-systems
     chart: actions-runner-controller-charts/gha-runner-scale-set-controller
-    version: 0.9.3
+    version: 0.10.1
 
   - needs: [arc-systems/arc]
     name: '{{ requiredEnv "ARC_RUNNER_NAME" }}'
     namespace: arc-runners
     chart: actions-runner-controller-charts/gha-runner-scale-set
-    version: 0.9.3
+    version: 0.10.1
     values:
       - githubConfigUrl: 'https://github.com/{{ requiredEnv "GITHUB_REPOSITORY" }}'
         githubConfigSecret: github-config
@@ -31,7 +31,7 @@ releases:
     name: '{{ requiredEnv "ARC_RUNNER_UBUNTU20_NAME" }}'
     namespace: arc-runners
     chart: actions-runner-controller-charts/gha-runner-scale-set
-    version: 0.9.3
+    version: 0.10.1
     values:
       - githubConfigUrl: 'https://github.com/{{ requiredEnv "GITHUB_REPOSITORY" }}'
         githubConfigSecret: github-config
