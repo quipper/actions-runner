@@ -37,6 +37,10 @@ jobs:
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
+      - run: make wait-for-listeners
+        env:
+          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
+          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
       - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
           name: e2e-test-controller-ready
