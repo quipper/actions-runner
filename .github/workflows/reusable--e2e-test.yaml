@@ -16,6 +16,9 @@ jobs:
   controller:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: write
     defaults:
       run:
         working-directory: e2e-test
