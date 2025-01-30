@@ -52,7 +52,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: '${{ github.head_ref || github.ref_name }}',
-              workflow_id: 'e2e-test-jobs.yaml',
+              workflow_id: 'reusable--e2e-test-jobs.yaml',
               inputs: {
                 'runner-name': `e2e-${context.runId}`,
                 'expected-image-os': 'ubuntu22',
