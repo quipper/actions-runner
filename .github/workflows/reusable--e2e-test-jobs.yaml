@@ -11,6 +11,16 @@ on:
         type: string
         required: true
         description: Expected value of $ImageOS
+  workflow_call:
+    inputs:
+      runner-name:
+        type: string
+        required: true
+        description: Name of runner
+      expected-image-os:
+        type: string
+        required: true
+        description: Expected value of $ImageOS
 
 jobs:
   runner:
