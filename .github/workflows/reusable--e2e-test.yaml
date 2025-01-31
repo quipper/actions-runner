@@ -37,10 +37,16 @@ jobs:
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
+      - run: make wait-for-listeners
+        env:
+          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
+          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
       - run: make wait-for-job
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+      - run: make runner-logs
+        if: always()
       - run: make listener-logs
         if: always()
       - run: make undeploy
