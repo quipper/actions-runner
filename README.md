@@ -1,30 +1,30 @@
 # quipper/actions-runner [![build](https://github.com/quipper/actions-runner/actions/workflows/build.yaml/badge.svg)](https://github.com/quipper/actions-runner/actions/workflows/build.yaml)
 
-This is a container image of [actions/runner](https://github.com/actions/runner) for the new RunnerScaleSets.
+This is a container image extending [actions/runner](https://github.com/actions/runner).
 
-## Purpose
+For maintainability and security,
 
-We extend the official image to solve the following issues:
+- Align to the official image
+- Keep the script simple
+- Do not add extra packages
 
-- ~We need to run a job on both amd64 and arm64 nodes.
+## Features
+
+We extend the official image for the following issues:
+
+- Run both runner and Dockerd in same container for the resource efficiency of Kubernetes nodes.
+  This image starts Dockerd under docker-init.
+- Add some essential packages such as `git`
+- Support Ubuntu 20.04 runner for backward compatibility
+- ~Run a job on both amd64 and arm64 nodes.
   This repository provides a multi-architectures image.
   ([community#56720](https://github.com/orgs/community/discussions/56720))~ (resolved by [actions/runner#2601](https://github.com/actions/runner/pull/2601))
-- We would like to run both runner and Dockerd in same container for the resource efficiency of Kubernetes nodes.
-  This image starts Dockerd under docker-init.
-- ~We need to use [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) but it does not support Debian.
+- ~Support [`ruby/setup-ruby`](https://github.com/ruby/setup-ruby#using-self-hosted-runners) which does not support Debian.
   This image is based on Ubuntu. ([actions-runner-controller#2610](https://github.com/actions/actions-runner-controller/issues/2610))~ (resolved by [actions/runner#2651](https://github.com/actions/runner/pull/2651))
-- We need some essential packages such as `git`
-- Support Ubuntu 20.04 runner for backward compatibility
 - ~Add a hosted tool cache for actions/setup-node ([#160](https://github.com/quipper/actions-runner/pull/160))~ (resolved by [actions/setup-node#857](https://github.com/actions/setup-node/issues/857))
 - ~Automatically set the cloud-local APT sources to reduce time of apt-get ([#432](https://github.com/quipper/actions-runner/pull/432))~
 
 We are looking for the official supports, but need to maintain our custom image for now.
-
-For long-term maintainability and security,
-
-- Align to the upstream image
-- Keep less packages
-- Keep simple logic
 
 ## Release
 

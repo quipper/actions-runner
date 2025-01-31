@@ -21,9 +21,9 @@ jobs:
         working-directory: e2e-test
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: aquaproj/aqua-installer@f13c5d2f0357708d85477aabe50fd3f725528745 # v3.1.0
+      - uses: aquaproj/aqua-installer@e2d0136abcf70b7a2f6f505720640750557c4b33 # v3.1.1
         with:
-          aqua_version: v2.41.0
+          aqua_version: v2.43.0
           working_directory: e2e-test
       - run: make cluster
       - run: make create-github-config-secret
@@ -50,6 +50,8 @@ jobs:
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+      - run: make runner-logs
+        if: always()
       - run: make listener-logs
         if: always()
       - run: make undeploy
