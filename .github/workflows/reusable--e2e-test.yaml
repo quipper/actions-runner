@@ -77,9 +77,11 @@ jobs:
             })
             core.setOutput('sha', branch.data.commit.sha)
       - uses: int128/wait-for-workflows-action@0b600b397a0a1da304bec289e74fd19fe7c797ac # v1.29.0
+        continue-on-error: true
         with:
           filter-workflow-names: e2e-test-jobs
           filter-workflow-events: workflow_dispatch
+          fail-fast: false
           sha: ${{ steps.create-workflow-dispatch.outputs.sha }}
 
       - run: make runner-logs
