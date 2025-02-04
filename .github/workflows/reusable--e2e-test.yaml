@@ -46,13 +46,14 @@ jobs:
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
 
       - name: Run e2e-test-jobs by workflow_dispatch
+        id: create-workflow-dispatch
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: '${{ github.head_ref || github.ref_name }}',
+              ref: 'main',
               workflow_id: 'reusable--e2e-test-jobs.yaml',
               inputs: {
                 'runner-name': `e2e-${context.runId}`,
@@ -62,16 +63,24 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: '${{ github.head_ref || github.ref_name }}',
+              ref: 'main',
               workflow_id: 'reusable--e2e-test-jobs.yaml',
               inputs: {
                 'runner-name': `e2e-ubuntu20-${context.runId}`,
                 'expected-image-os': 'ubuntu20',
               },
             })
+            const branch = await github.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: 'main',
+            })
+            core.setOutput('sha', branch.data.commit.sha)
       - uses: int128/wait-for-workflows-action@0b600b397a0a1da304bec289e74fd19fe7c797ac # v1.29.0
         with:
+          filter-workflow-names: e2e-test-jobs
           filter-workflow-events: workflow_dispatch
+          sha: ${{ steps.create-workflow-dispatch.outputs.sha }}
 
       - run: make runner-logs
         if: always()
