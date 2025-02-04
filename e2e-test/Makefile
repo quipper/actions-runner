@@ -27,6 +27,12 @@ wait-for-listeners:
 	while ! kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
 
+.PHONY: wait-for-job
+wait-for-job:
+	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
+	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
+	kubectl get pods -n arc-runners
+
 # Unregister runners and runner sets from GitHub
 .PHONY: undeploy
 undeploy:
