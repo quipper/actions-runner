@@ -70,7 +70,7 @@ jobs:
                 'expected-image-os': 'ubuntu20',
               },
             })
-            const branch = await github.repos.getBranch({
+            const branch = await github.rest.repos.getBranch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               branch: 'main',
