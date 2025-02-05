@@ -42,14 +42,11 @@ COPY entrypoint.sh /
 
 VOLUME /var/lib/docker
 
-# docker-init sends the signal to children
-ENV RUNNER_MANUALLY_TRAP_SIG=
-
 # Disable the log by default, because it is too large
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=
 
 # Align to GitHub-hosted runners (ubuntu-latest)
 ENV LANG=C.UTF-8
 
-ENTRYPOINT ["/usr/bin/docker-init", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/docker-init", "-v", "--", "/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]
