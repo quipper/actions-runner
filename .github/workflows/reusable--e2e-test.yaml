@@ -27,7 +27,10 @@ on:
 jobs:
   controller:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
     defaults:
       run:
         working-directory: e2e-test
@@ -46,17 +49,53 @@ jobs:
       - run: make deploy
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
       - run: make wait-for-listeners
         env:
           ARC_RUNNER_NAME: e2e-${{ github.run_id }}
           ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
-      - run: make wait-for-job
-        env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+
+      - name: Run e2e-test-jobs by workflow_dispatch
+        id: create-workflow-dispatch
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'main',
+              workflow_id: 'reusable--e2e-test-jobs.yaml',
+              inputs: {
+                'runner-name': `e2e-${context.runId}`,
+                'expected-image-os': 'ubuntu22',
+              },
+            })
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'main',
+              workflow_id: 'reusable--e2e-test-jobs.yaml',
+              inputs: {
+                'runner-name': `e2e-ubuntu20-${context.runId}`,
+                'expected-image-os': 'ubuntu20',
+              },
+            })
+            const branch = await github.rest.repos.getBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: 'main',
+            })
+            core.setOutput('sha', branch.data.commit.sha)
+      - uses: int128/wait-for-workflows-action@0b600b397a0a1da304bec289e74fd19fe7c797ac # v1.29.0
+        continue-on-error: true
+        with:
+          filter-workflow-names: e2e-test-jobs
+          filter-workflow-events: workflow_dispatch
+          fail-fast: false
+          sha: ${{ steps.create-workflow-dispatch.outputs.sha }}
+
       - run: make runner-logs
         if: always()
       - run: make listener-logs
@@ -65,15 +104,3 @@ jobs:
         if: always()
       - run: make controller-logs
         if: always()
-
-  test:
-    uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
-    with:
-      runner-name: e2e-${{ github.run_id }}
-      expected-image-os: ubuntu22
-
-  test-ubuntu20:
-    uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
-    with:
-      runner-name: e2e-ubuntu20-${{ github.run_id }}
-      expected-image-os: ubuntu20
