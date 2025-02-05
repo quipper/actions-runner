@@ -24,7 +24,7 @@ on:
 
 concurrency:
   cancel-in-progress: true
-  group: ${{ inputs.runner-name }}
+  group: ${{ github.workflow }}--${{ inputs.runner-name }}
 
 jobs:
   runner:
