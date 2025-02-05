@@ -22,6 +22,10 @@ on:
         required: true
         description: Expected value of $ImageOS
 
+concurrency:
+  cancel-in-progress: true
+  group: ${{ inputs.runner-name }}
+
 jobs:
   runner:
     runs-on: ${{ inputs.runner-name }}
