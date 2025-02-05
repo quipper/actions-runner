@@ -1,7 +1,7 @@
 name: e2e-test-jobs
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       runner-name:
         type: string
@@ -11,7 +11,7 @@ on:
         type: string
         required: true
         description: Expected value of $ImageOS
-  workflow_call:
+  workflow_dispatch:
     inputs:
       runner-name:
         type: string
