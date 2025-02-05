@@ -24,6 +24,10 @@ on:
         description: Image URI of runner (ubuntu20)
         default: ghcr.io/quipper/actions-runner:main-ubuntu20
 
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}--${{ github.head_ref || inputs.runner-name }}
+
 jobs:
   controller:
     runs-on: ubuntu-latest
