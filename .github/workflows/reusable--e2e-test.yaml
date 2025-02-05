@@ -11,6 +11,18 @@ on:
         type: string
         required: true
         description: Image URI of runner (ubuntu20)
+  workflow_dispatch:
+    inputs:
+      runner-image-uri:
+        type: string
+        required: true
+        description: Image URI of runner
+        default: ghcr.io/quipper/actions-runner:main
+      runner-ubuntu20-image-uri:
+        type: string
+        required: true
+        description: Image URI of runner (ubuntu20)
+        default: ghcr.io/quipper/actions-runner:main-ubuntu20
 
 jobs:
   controller:
