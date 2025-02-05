@@ -38,8 +38,3 @@ Here is the versioning policy.
 
 - Use same version as the upstream, such as `2.304.0`
 - If we have added a change, increment the patch version. For example, if the upstream is `2.304.0`, we will create `2.304.1`
-
-## Contributions
-
-This is an open source project.
-Feel free to open issues and pull requests for improving code and documents.
