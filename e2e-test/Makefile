@@ -21,17 +21,26 @@ deploy:
 	helm list -A
 	kubectl get pods -n arc-systems
 
+.PHONY: wait-for-listeners
+wait-for-listeners:
+	while ! kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
+	while ! kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
+	kubectl get pods -n arc-systems
+
 .PHONY: wait-for-job
 wait-for-job:
 	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
 	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-runners
-	-kubectl logs -n arc-runners -l app.kubernetes.io/component=runner --tail=-1 -f
 
 # Unregister runners and runner sets from GitHub
 .PHONY: undeploy
 undeploy:
 	kubectl delete -n arc-runners --all AutoscalingRunnerSet
+
+.PHONY: runner-logs
+runner-logs:
+	-kubectl logs -n arc-runners -l app.kubernetes.io/component=runner --tail=-1 -f
 
 .PHONY: listener-logs
 listener-logs:
