@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 sudo /usr/bin/dockerd --log-level warn &
 
 # Cancel the current job when the pod is deleting.
