@@ -36,25 +36,30 @@ jobs:
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        id: runner-name
+        with:
+          result-encoding: string
+          script: return `e2e-${Date.now()}`
       - run: make deploy
         env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
+          ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-${{ github.run_id }}-ubuntu20
+          ARC_RUNNER_UBUNTU20_NAME: ${{ steps.runner-name.outputs.result }}-ubuntu20
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
       - run: make wait-for-listeners
         env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-${{ github.run_id }}-ubuntu20
-      - run: sleep 10
+          ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ steps.runner-name.outputs.result }}-ubuntu20
+      - run: echo '${{ steps.runner-name.outputs.result }}' > runner-name
       - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
           name: e2e-test-listener-ready
-          path: e2e-test/kubeconfig.yaml
+          path: runner-name
       - run: make wait-for-job
         env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-${{ github.run_id }}-ubuntu20
+          ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ steps.runner-name.outputs.result }}-ubuntu20
       - run: make runner-logs
         if: always()
       - run: make listener-logs
@@ -85,14 +90,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      runner-name: e2e-${{ github.run_id }}
+      runner-name: ${{ steps.artifact.outputs.runner-name }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - run: |
+      - id: artifact
+        run: |
           set -x
           until gh run download "$GITHUB_RUN_ID" --name e2e-test-listener-ready; do
             sleep 5
           done
+          echo "runner-name=$(cat cat runner-name)" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
