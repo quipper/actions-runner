@@ -38,8 +38,8 @@ jobs:
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - id: runner-name
         run: |
-          echo "e2e-$(date +%s)" > runner-name
-          echo "result=$(cat runner-name)" >> "$GITHUB_OUTPUT"
+          echo "e2e-$(date +%s)" > e2e-test/runner-name
+          echo "result=$(cat e2e-test/runner-name)" >> "$GITHUB_OUTPUT"
       - run: make deploy
         env:
           ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
@@ -54,7 +54,7 @@ jobs:
         with:
           if-no-files-found: error
           name: e2e-test-listener-ready
-          path: runner-name
+          path: e2e-test/runner-name
       - run: make wait-for-job
         env:
           ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
