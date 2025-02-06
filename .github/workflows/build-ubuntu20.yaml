@@ -1,4 +1,4 @@
-name: build
+name: build-ubuntu20
 
 on:
   pull_request:
@@ -14,6 +14,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    with:
+      file: Dockerfile.ubuntu20
+      flavor: suffix=-ubuntu20
 
   e2e-test:
     needs: build
@@ -24,8 +27,8 @@ jobs:
       actions: write
     with:
       runner-image-uri: ${{ needs.build.outputs.image-uri }}
-      runner-name: test-runner-${{ github.event.pull_request.number || github.ref_name }}-ubuntu22
-      expected-image-os: ubuntu22
+      runner-name: test-runner-${{ github.event.pull_request.number || github.ref_name }}-ubuntu20
+      expected-image-os: ubuntu20
 
   finally-cancel-workflow-run:
     needs: e2e-test
