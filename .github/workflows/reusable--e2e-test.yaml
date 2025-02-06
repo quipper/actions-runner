@@ -14,7 +14,7 @@ on:
       runner-base-name:
         type: string
         description: Base name of runner
-        default: e2e-${{ github.event.pull_request.number || github.ref_name }}
+        default: test-runner-${{ github.event.pull_request.number || github.ref_name }}
 
 concurrency:
   group: ${{ github.workflow }}--${{ github.ref }}
