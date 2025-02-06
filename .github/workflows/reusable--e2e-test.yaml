@@ -93,15 +93,15 @@ jobs:
       runner-name: ${{ steps.artifact.outputs.runner-name }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - id: artifact
-        run: |
+      - run: |
           set -x
           until gh run download "$GITHUB_RUN_ID" --name e2e-test-listener-ready; do
             sleep 5
           done
-          echo "runner-name=$(cat cat runner-name)" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: artifact
+        run: echo "runner-name=$(cat runner-name)" >> "$GITHUB_OUTPUT"
 
   test:
     needs: wait-for-listener
