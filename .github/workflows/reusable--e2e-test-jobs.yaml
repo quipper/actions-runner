@@ -14,7 +14,7 @@ on:
 
 jobs:
   test:
-    name: test / ${{ inputs.runner-name }}
+    name: ${{ inputs.runner-name }}
     runs-on: ${{ inputs.runner-name }}
     timeout-minutes: 10
     services:
