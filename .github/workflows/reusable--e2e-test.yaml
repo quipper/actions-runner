@@ -39,6 +39,8 @@ jobs:
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
+      - if: inputs.expected-image-os == 'ubuntu20'
+        run: sleep 60
       - run: make deploy
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-name }}
