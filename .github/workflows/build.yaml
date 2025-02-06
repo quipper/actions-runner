@@ -30,6 +30,9 @@ jobs:
       - build-ubuntu20
     uses: ./.github/workflows/reusable--e2e-test.yaml
     secrets: inherit
+    permissions:
+      contents: read
+      actions: write
     with:
       runner-image-uri: ${{ needs.build.outputs.image-uri }}
       runner-ubuntu20-image-uri: ${{ needs.build-ubuntu20.outputs.image-uri }}

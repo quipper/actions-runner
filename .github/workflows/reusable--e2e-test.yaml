@@ -11,6 +11,15 @@ on:
         type: string
         required: true
         description: Image URI of runner (ubuntu20)
+      runner-base-name:
+        type: string
+        description: Base name of runner
+        default: test-runner-${{ github.event.pull_request.number || github.ref_name }}
+
+concurrency:
+  # One workflow run per a pull request or pushed branch
+  group: ${{ github.workflow }}--${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   controller:
@@ -23,7 +32,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: aquaproj/aqua-installer@e2d0136abcf70b7a2f6f505720640750557c4b33 # v3.1.1
         with:
-          aqua_version: v2.43.0
+          aqua_version: v2.43.2
           working_directory: e2e-test
       - run: make cluster
       - run: make create-github-config-secret
@@ -33,14 +42,14 @@ jobs:
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make deploy
         env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
       - run: make wait-for-listeners
         env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
       - run: sleep 10
       - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
@@ -48,8 +57,8 @@ jobs:
           path: e2e-test/kubeconfig.yaml
       - run: make wait-for-job
         env:
-          ARC_RUNNER_NAME: e2e-${{ github.run_id }}
-          ARC_RUNNER_UBUNTU20_NAME: e2e-ubuntu20-${{ github.run_id }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
       - run: make runner-logs
         if: always()
       - run: make listener-logs
@@ -58,6 +67,23 @@ jobs:
         if: always()
       - run: make controller-logs
         if: always()
+
+  finally-cancel-workflow-run:
+    needs: controller
+    if: failure()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            await github.rest.actions.cancelWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+            })
 
   wait-for-controller:
     runs-on: ubuntu-latest
@@ -76,12 +102,12 @@ jobs:
     needs: wait-for-controller
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: e2e-${{ github.run_id }}
+      runner-name: ${{ inputs.runner-base-name }}
       expected-image-os: ubuntu22
 
   test-ubuntu20:
     needs: wait-for-controller
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: e2e-ubuntu20-${{ github.run_id }}
+      runner-name: ${{ inputs.runner-base-name }}-ubuntu20
       expected-image-os: ubuntu20
