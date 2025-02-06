@@ -13,7 +13,8 @@ on:
         description: Expected value of $ImageOS
 
 jobs:
-  runner:
+  test:
+    name: test / ${{ inputs.runner-name }}
     runs-on: ${{ inputs.runner-name }}
     timeout-minutes: 10
     services:

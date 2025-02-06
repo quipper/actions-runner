@@ -11,10 +11,6 @@ on:
         type: string
         required: true
         description: Image URI of runner (ubuntu20)
-      runner-base-name:
-        type: string
-        description: Base name of runner
-        default: test-runner-${{ github.event.pull_request.number || github.ref_name }}
 
 concurrency:
   # One workflow run per a pull request or pushed branch
@@ -40,20 +36,29 @@ jobs:
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
+      - id: runner-name
+        run: |
+          echo "e2e-$(date +%s)" > runner-name
+          echo "result=$(cat runner-name)" >> "$GITHUB_OUTPUT"
       - run: make deploy
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_UBUNTU20_NAME: ${{ steps.runner-name.outputs.result }}-ubuntu20
           ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
       - run: make wait-for-listeners
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ steps.runner-name.outputs.result }}-ubuntu20
+      - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+        with:
+          if-no-files-found: error
+          name: e2e-test-listener-ready
+          path: e2e-test/runner-name
       - run: make wait-for-job
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_NAME: ${{ steps.runner-name.outputs.result }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ steps.runner-name.outputs.result }}-ubuntu20
       - run: make runner-logs
         if: always()
       - run: make listener-logs
@@ -80,14 +85,33 @@ jobs:
               run_id: context.runId,
             })
 
+  wait-for-listener:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      runner-name: ${{ steps.artifact.outputs.runner-name }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: |
+          set -x
+          until gh run download "$GITHUB_RUN_ID" --name e2e-test-listener-ready; do
+            sleep 5
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: artifact
+        run: echo "runner-name=$(cat runner-name)" >> "$GITHUB_OUTPUT"
+
   test:
+    needs: wait-for-listener
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: ${{ inputs.runner-base-name }}
+      runner-name: ${{ needs.wait-for-listener.outputs.runner-name }}
       expected-image-os: ubuntu22
 
   test-ubuntu20:
+    needs: wait-for-listener
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: ${{ inputs.runner-base-name }}-ubuntu20
+      runner-name: ${{ needs.wait-for-listener.outputs.runner-name }}-ubuntu20
       expected-image-os: ubuntu20
