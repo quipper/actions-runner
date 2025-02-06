@@ -11,8 +11,7 @@ releases:
     chart: actions-runner-controller-charts/gha-runner-scale-set-controller
     version: 0.10.1
 
-  - needs: [arc-systems/arc]
-    name: '{{ requiredEnv "ARC_RUNNER_NAME" }}'
+  - name: '{{ requiredEnv "ARC_RUNNER_NAME" }}'
     namespace: arc-runners
     chart: actions-runner-controller-charts/gha-runner-scale-set
     version: 0.10.1
@@ -27,8 +26,7 @@ releases:
                 securityContext:
                   privileged: true
 
-  - needs: [arc-systems/arc]
-    name: '{{ requiredEnv "ARC_RUNNER_UBUNTU20_NAME" }}'
+  - name: '{{ requiredEnv "ARC_RUNNER_UBUNTU20_NAME" }}'
     namespace: arc-runners
     chart: actions-runner-controller-charts/gha-runner-scale-set
     version: 0.10.1
