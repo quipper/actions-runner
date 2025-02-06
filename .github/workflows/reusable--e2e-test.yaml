@@ -91,3 +91,33 @@ jobs:
     with:
       runner-name: ${{ inputs.runner-base-name }}-ubuntu20
       expected-image-os: ubuntu20
+
+  controller-dummy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: e2e-test
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: aquaproj/aqua-installer@e2d0136abcf70b7a2f6f505720640750557c4b33 # v3.1.1
+        with:
+          aqua_version: v2.43.2
+          working_directory: e2e-test
+      - run: make cluster
+      - run: make create-github-config-secret
+        env:
+          APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
+          APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
+      - run: make deploy
+        env:
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
+      - run: make wait-for-listeners
+        env:
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+      - run: sleep 180
