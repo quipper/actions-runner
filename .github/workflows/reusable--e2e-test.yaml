@@ -17,6 +17,7 @@ on:
         default: test-runner-${{ github.event.pull_request.number || github.ref_name }}
 
 concurrency:
+  # One workflow run per a pull request or pushed branch
   group: ${{ github.workflow }}--${{ github.ref }}
   cancel-in-progress: true
 
