@@ -24,5 +24,26 @@ jobs:
       actions: write
     with:
       runner-image-uri: ${{ needs.build.outputs.image-uri }}
-      runner-name: test-runner-${{ github.event.pull_request.number || github.ref_name }}-ubuntu22
+      runner-name: e2e-${{ github.event.pull_request.number || github.ref_name }}-ubuntu22
       expected-image-os: ubuntu22
+
+  build-ubuntu20:
+    uses: ./.github/workflows/reusable--build.yaml
+    permissions:
+      contents: read
+      packages: write
+    with:
+      file: Dockerfile.ubuntu20
+      flavor: suffix=-ubuntu20
+
+  e2e-test-ubuntu20:
+    needs: build-ubuntu20
+    uses: ./.github/workflows/reusable--e2e-test.yaml
+    secrets: inherit
+    permissions:
+      contents: read
+      actions: write
+    with:
+      runner-image-uri: ${{ needs.build-ubuntu20.outputs.image-uri }}
+      runner-name: e2e-${{ github.event.pull_request.number || github.ref_name }}-ubuntu20
+      expected-image-os: ubuntu20
