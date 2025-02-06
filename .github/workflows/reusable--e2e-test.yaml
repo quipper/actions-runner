@@ -7,18 +7,17 @@ on:
         type: string
         required: true
         description: Image URI of runner
-      runner-ubuntu20-image-uri:
+      runner-name:
         type: string
         required: true
-        description: Image URI of runner (ubuntu20)
-      runner-base-name:
+        description: Name of runner
+      expected-image-os:
         type: string
-        description: Base name of runner
-        default: test-runner-${{ github.event.pull_request.number || github.ref_name }}
+        required: true
+        description: Expected value of $ImageOS
 
 concurrency:
-  # One workflow run per a pull request or pushed branch
-  group: ${{ github.workflow }}--${{ github.ref }}
+  group: ${{ inputs.runner-name }}
   cancel-in-progress: true
 
 jobs:
@@ -42,18 +41,14 @@ jobs:
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make deploy
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-name }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
-          ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
       - run: make wait-for-listeners
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_NAME: ${{ inputs.runner-name }}
       - run: make wait-for-job
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_NAME: ${{ inputs.runner-name }}
       - run: make runner-logs
         if: always()
       - run: make listener-logs
@@ -63,31 +58,8 @@ jobs:
       - run: make controller-logs
         if: always()
 
-  finally-cancel-workflow-run:
-    needs: controller
-    if: failure()
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      actions: write
-    steps:
-      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            await github.rest.actions.cancelWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.runId,
-            })
-
   test:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: ${{ inputs.runner-base-name }}
-      expected-image-os: ubuntu22
-
-  test-ubuntu20:
-    uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
-    with:
-      runner-name: ${{ inputs.runner-base-name }}-ubuntu20
-      expected-image-os: ubuntu20
+      runner-name: ${{ inputs.runner-name }}
+      expected-image-os: ${{ inputs.expected-image-os }}
