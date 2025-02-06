@@ -25,6 +25,7 @@ deploy-controller:
 deploy-runner-scale-set:
 	helmfile sync -l name=$(ARC_RUNNER_NAME)
 	until kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
+	sleep 30
 	helmfile sync -l name=$(ARC_RUNNER_UBUNTU20_NAME)
 	until kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
