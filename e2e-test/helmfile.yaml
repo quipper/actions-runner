@@ -11,33 +11,33 @@ releases:
     chart: actions-runner-controller-charts/gha-runner-scale-set-controller
     version: 0.10.1
 
-  - name: '{{ requiredEnv "ARC_RUNNER_NAME" }}'
+  - name: '{{ env "ARC_RUNNER_NAME" }}'
     namespace: arc-runners
     chart: actions-runner-controller-charts/gha-runner-scale-set
     version: 0.10.1
     values:
-      - githubConfigUrl: 'https://github.com/{{ requiredEnv "GITHUB_REPOSITORY" }}'
+      - githubConfigUrl: 'https://github.com/{{ env "GITHUB_REPOSITORY" }}'
         githubConfigSecret: github-config
         template:
           spec:
             containers:
               - name: runner
-                image: '{{ requiredEnv "ARC_RUNNER_IMAGE_URI" }}'
+                image: '{{ env "ARC_RUNNER_IMAGE_URI" }}'
                 securityContext:
                   privileged: true
 
-  - name: '{{ requiredEnv "ARC_RUNNER_UBUNTU20_NAME" }}'
+  - name: '{{ env "ARC_RUNNER_UBUNTU20_NAME" }}'
     namespace: arc-runners
     chart: actions-runner-controller-charts/gha-runner-scale-set
     version: 0.10.1
     values:
-      - githubConfigUrl: 'https://github.com/{{ requiredEnv "GITHUB_REPOSITORY" }}'
+      - githubConfigUrl: 'https://github.com/{{ env "GITHUB_REPOSITORY" }}'
         githubConfigSecret: github-config
         template:
           spec:
             containers:
               - name: runner
-                image: '{{ requiredEnv "ARC_RUNNER_UBUNTU20_IMAGE_URI" }}'
+                image: '{{ env "ARC_RUNNER_UBUNTU20_IMAGE_URI" }}'
                 securityContext:
                   privileged: true
 
