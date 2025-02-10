@@ -15,14 +15,14 @@ create-github-config-secret:
 		"--from-literal=github_app_installation_id=$${APP_INSTALLATION_ID}" \
 		"--from-literal=github_app_private_key=$${APP_PRIVATE_KEY}"
 
-.PHONY: deploy
-deploy:
-	helmfile sync
-	helm list -A
+.PHONY: deploy-controller
+deploy-controller:
+	helmfile sync -l name=arc
 	kubectl get pods -n arc-systems
 
-.PHONY: wait-for-listener
-wait-for-listener:
+.PHONY: deploy-runner
+deploy-runner:
+	helmfile sync -l name=$(ARC_RUNNER_NAME)
 	until kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
 
