@@ -17,8 +17,9 @@ create-github-config-secret:
 
 .PHONY: deploy
 deploy:
+	helmfile sync -l name=arc
+	sleep 60
 	helmfile sync
-	helm list -A
 	kubectl get pods -n arc-systems
 
 .PHONY: wait-for-listeners
