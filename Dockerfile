@@ -1,7 +1,5 @@
-ARG RUNNER_VERSION=2.322.0
-
-# extends https://github.com/actions/runner/blob/main/images/Dockerfile
-FROM ghcr.io/actions/actions-runner:${RUNNER_VERSION}
+# https://github.com/actions/runner/blob/main/images/Dockerfile
+FROM ghcr.io/actions/actions-runner:2.322.0@sha256:c02e8e1b479ea39b196c3bb0a40a66a191302654a6ef5c042eafe11c13323137
 
 ARG TARGETOS
 ARG TARGETARCH

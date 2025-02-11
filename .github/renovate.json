@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":automergeMinor",
+    ":automergeDigest",
+    ":reviewer(team:sre-actions-runner)",
+    "helpers:pinGitHubActionDigests",
+    "github>aquaproj/aqua-renovate-config#2.7.0"
+  ],
+  "labels": [
+    "renovate",
+    "renovate/{{depName}}"
+  ],
+  "packageRules": [
+    {
+      "description": "Group actions-runner-controller charts",
+      "matchDepNames": [
+        "gha-runner-scale-set-controller",
+        "gha-runner-scale-set"
+      ],
+      "groupName": "actions-runner-controller-charts"
+    }
+  ]
+}
