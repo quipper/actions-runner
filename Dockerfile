@@ -49,5 +49,5 @@ ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=
 # Align to GitHub-hosted runners (ubuntu-latest)
 ENV LANG=C.UTF-8
 
-ENTRYPOINT ["/usr/bin/docker-init", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/docker-init", "-v", "--", "/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]
