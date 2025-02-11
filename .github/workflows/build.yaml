@@ -39,7 +39,7 @@ jobs:
 
   release:
     needs:
-      - build-ubuntu22
+      - build-latest
       - build-ubuntu20
     uses: ./.github/workflows/reusable--release.yaml
     secrets: inherit
@@ -47,5 +47,5 @@ jobs:
       contents: read
       pull-requests: write
     with:
-      runner-image-uri-ubuntu22: ${{ needs.build-ubuntu22.outputs.image-uri }}
+      runner-image-uri-latest: ${{ needs.build-latest.outputs.image-uri }}
       runner-image-uri-ubuntu20: ${{ needs.build-ubuntu20.outputs.image-uri }}

@@ -3,10 +3,10 @@ name: release
 on:
   workflow_call:
     inputs:
-      runner-image-uri-ubuntu22:
+      runner-image-uri-latest:
         type: string
         required: true
-        description: Image URI of runner
+        description: Image URI of runner (latest)
       runner-image-uri-ubuntu20:
         type: string
         required: true
@@ -22,17 +22,18 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - id: get-runner-version-ubuntu22
+      # Ensure the runner versions are the same
+      - id: get-runner-version-latest
         run: bash hack/get-runner-version.sh
         env:
-          RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu22 }}
+          RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-latest }}
       - id: get-runner-version-ubuntu20
         run: bash hack/get-runner-version.sh
         env:
           RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu20 }}
-      - run: test "$RUNNER_VERSION_UBUNTU22" = "$RUNNER_VERSION_UBUNTU20"
+      - run: test "$RUNNER_VERSION_LATEST" = "$RUNNER_VERSION_UBUNTU20"
         env:
-          RUNNER_VERSION_UBUNTU22: ${{ steps.get-runner-version-ubuntu22.outputs.runner-version }}
+          RUNNER_VERSION_LATEST: ${{ steps.get-runner-version-latest.outputs.runner-version }}
           RUNNER_VERSION_UBUNTU20: ${{ steps.get-runner-version-ubuntu20.outputs.runner-version }}
 
       # When Renovate has updated the runner version,
@@ -45,7 +46,7 @@ jobs:
       - id: create-release
         run: bash hack/create-release-if-not-exists.sh
         env:
-          RUNNER_VERSION: ${{ steps.get-runner-version-ubuntu22.outputs.runner-version }}
+          RUNNER_VERSION: ${{ steps.get-runner-version-latest.outputs.runner-version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Trigger the build workflow against the new release
           RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
