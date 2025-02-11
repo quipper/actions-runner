@@ -1,14 +1,13 @@
 #!/bin/bash
-set -eux
+set -eux -o pipefail
+
+: "$RUNNER_VERSION"
 
 set_comment_output () {
   echo "comment=$*" >> "$GITHUB_OUTPUT"
 }
 
-# Find the runner version in Dockerfile
-actions_runner_version="$(grep RUNNER_VERSION= Dockerfile | cut -f2 -d=)"
-
-if gh release view "$actions_runner_version"; then
+if gh release view "$RUNNER_VERSION"; then
   if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
     set_comment_output ":bulb: If you need a new version, [create a new release](https://github.com/quipper/actions-runner/releases/new) after merge."
   fi
@@ -16,11 +15,11 @@ if gh release view "$actions_runner_version"; then
 fi
 
 if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
-  set_comment_output ":robot: GitHub Actions will automatically create a release ${actions_runner_version} after merge."
+  set_comment_output ":robot: GitHub Actions will automatically create a release ${RUNNER_VERSION} after merge."
   exit
 fi
 
 # Create a release if not exists
-GITHUB_TOKEN="$RELEASE_TOKEN" gh release create "$actions_runner_version" --generate-notes
+GITHUB_TOKEN="$RELEASE_TOKEN" gh release create "$RUNNER_VERSION" --generate-notes
 
-set_comment_output ":robot: GitHub Actions automatically created a new release ${actions_runner_version}"
+set_comment_output ":robot: GitHub Actions automatically created a new release ${RUNNER_VERSION}"

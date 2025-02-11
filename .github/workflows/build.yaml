@@ -36,3 +36,16 @@ jobs:
     with:
       runner-image-uri-latest: ${{ needs.build-latest.outputs.image-uri }}
       runner-image-uri-ubuntu20: ${{ needs.build-ubuntu20.outputs.image-uri }}
+
+  release:
+    needs:
+      - build-latest
+      - build-ubuntu20
+    uses: ./.github/workflows/reusable--release.yaml
+    secrets: inherit
+    permissions:
+      contents: read
+      pull-requests: write
+    with:
+      runner-image-uri-latest: ${{ needs.build-latest.outputs.image-uri }}
+      runner-image-uri-ubuntu20: ${{ needs.build-ubuntu20.outputs.image-uri }}
