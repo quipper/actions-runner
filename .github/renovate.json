@@ -8,12 +8,20 @@
     "helpers:pinGitHubActionDigests",
     "github>aquaproj/aqua-renovate-config#2.7.0"
   ],
-  "labels": ["renovate", "renovate/{{depName}}"],
-  "regexManagers": [
+  "labels": [
+    "renovate",
+    "renovate/{{depName}}"
+  ],
+  "customManagers": [
     {
+      "customType": "regex",
       "description": "Update actions/runner version",
-      "fileMatch": ["^Dockerfile"],
-      "matchStrings": ["RUNNER_VERSION=(?<currentValue>.*?)\\s"],
+      "fileMatch": [
+        "^Dockerfile"
+      ],
+      "matchStrings": [
+        "RUNNER_VERSION=(?<currentValue>.*?)\\s"
+      ],
       "depNameTemplate": "actions/runner",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
@@ -22,8 +30,12 @@
   "packageRules": [
     {
       "description": "Disable docker because regexManager updates it",
-      "matchDepNames": ["ghcr.io/actions/actions-runner"],
-      "matchDatasources": ["docker"],
+      "matchDepNames": [
+        "ghcr.io/actions/actions-runner"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
       "enabled": false
     },
     {
