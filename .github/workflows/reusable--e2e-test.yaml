@@ -45,11 +45,15 @@ jobs:
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu22
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu22 }}
-      - run: sleep 60
       - run: make runner-scale-set
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu20 }}
+      - run: sleep 60
+      - run: make runner-scale-set
+        env:
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-dummy
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu22 }}
       - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu22
