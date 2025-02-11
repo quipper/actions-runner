@@ -29,14 +29,12 @@
   ],
   "packageRules": [
     {
-      "description": "Disable docker because regexManager updates it",
+      "description": "Group actions-runner",
       "matchDepNames": [
+        "actions/runner",
         "ghcr.io/actions/actions-runner"
       ],
-      "matchDatasources": [
-        "docker"
-      ],
-      "enabled": false
+      "groupName": "actions-runner"
     },
     {
       "description": "Group actions-runner-controller charts",
