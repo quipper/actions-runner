@@ -6,12 +6,9 @@
     ":automergeDigest",
     ":reviewer(team:sre-actions-runner)",
     "helpers:pinGitHubActionDigests",
-    "github>aquaproj/aqua-renovate-config#2.7.0",
+    "github>aquaproj/aqua-renovate-config#2.7.0"
   ],
-  "labels": [
-    "renovate",
-    "renovate/{{depName}}",
-  ],
+  "labels": ["renovate", "renovate/{{depName}}"],
   "regexManagers": [
     {
       "description": "Update actions/runner version",
@@ -20,22 +17,22 @@
       "depNameTemplate": "actions/runner",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.*)$"
-    },
+    }
   ],
   "packageRules": [
     {
       "description": "Disable docker because regexManager updates it",
       "matchDepNames": ["ghcr.io/actions/actions-runner"],
       "matchDatasources": ["docker"],
-      "enabled": false,
+      "enabled": false
     },
     {
       "description": "Group actions-runner-controller charts",
       "matchDepNames": [
         "gha-runner-scale-set-controller",
-        "gha-runner-scale-set",
+        "gha-runner-scale-set"
       ],
-      "groupName": "actions-runner-controller-charts",
-    },
+      "groupName": "actions-runner-controller-charts"
+    }
   ]
 }
