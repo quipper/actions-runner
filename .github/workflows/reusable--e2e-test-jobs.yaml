@@ -23,7 +23,7 @@ jobs:
         env:
           expected_image_os: ${{ inputs.expected-image-os }}
 
-  test-docker:
+  test-actions:
     runs-on: ${{ inputs.runner-name }}
     timeout-minutes: 10
     steps:
@@ -37,10 +37,6 @@ jobs:
           context: e2e-test
           file: e2e-test/fixture.dockerfile
 
-  test-actions:
-    runs-on: ${{ inputs.runner-name }}
-    timeout-minutes: 10
-    steps:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3
