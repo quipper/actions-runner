@@ -40,20 +40,20 @@ jobs:
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
-      - run: make deploy-controller
-      - run: make deploy-runner
+      - run: make controller
+      - run: make runner-scale-set
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
       - run: sleep 60
-      - run: make deploy-runner
+      - run: make runner-scale-set
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
-      - run: make wait-for-job
+      - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-      - run: make wait-for-job
+      - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
       - run: make runner-logs
