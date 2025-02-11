@@ -71,5 +71,5 @@ ENV ImageOS=ubuntu20
 ENV LANG=C.UTF-8
 
 USER runner
-ENTRYPOINT ["/usr/bin/docker-init", "--", "/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/docker-init", "-v", "--", "/entrypoint.sh"]
 CMD ["/home/runner/run.sh"]
