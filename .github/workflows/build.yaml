@@ -37,27 +37,42 @@ jobs:
       runner-image-uri-ubuntu22: ${{ needs.build-ubuntu22.outputs.image-uri }}
       runner-image-uri-ubuntu20: ${{ needs.build-ubuntu20.outputs.image-uri }}
 
-  # When Renovate has updated the version of actions/runner,
-  # automatically create a new release into GitHub Releases.
   create-release-if-not-exists:
     needs:
       - build-ubuntu22
+      - build-ubuntu20
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
       pull-requests: write
     steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - id: get-runner-version-ubuntu22
+        run: bash hack/get-runner-version.sh
+        env:
+          RUNNER_IMAGE_URI: ${{ needs.build-ubuntu22.outputs.image-uri }}
+      - id: get-runner-version-ubuntu20
+        run: bash hack/get-runner-version.sh
+        env:
+          RUNNER_IMAGE_URI: ${{ needs.build-ubuntu20.outputs.image-uri }}
+      - run: test "$RUNNER_VERSION_UBUNTU22" = "$RUNNER_VERSION_UBUNTU20"
+        env:
+          RUNNER_VERSION_UBUNTU22: ${{ steps.get-runner-version-ubuntu22.outputs.runner-version }}
+          RUNNER_VERSION_UBUNTU20: ${{ steps.get-runner-version-ubuntu20.outputs.runner-version }}
+
+      # When Renovate has updated the runner version,
+      # automatically create a new release into GitHub Releases.
       - uses: actions/create-github-app-token@67e27a7eb7db372a1c61a7f9bdab8699e9ee57f7 # v1.11.3
         id: release-token
         with:
           app-id: ${{ secrets.E2E_TEST_APP_ID }}
           private-key: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - id: create-release
         run: bash hack/create-release-if-not-exists.sh
         env:
-          RUNNER_IMAGE_URI: ${{ needs.build-ubuntu22.outputs.image-uri }}
+          RUNNER_VERSION: ${{ steps.get-runner-version-ubuntu22.outputs.runner-version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Trigger the build workflow against the new release
           RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
