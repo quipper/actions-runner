@@ -9,7 +9,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  build-ubuntu22:
     uses: ./.github/workflows/reusable--build.yaml
     permissions:
       contents: read
@@ -26,7 +26,7 @@ jobs:
 
   e2e-test:
     needs:
-      - build
+      - build-ubuntu22
       - build-ubuntu20
     uses: ./.github/workflows/reusable--e2e-test.yaml
     secrets: inherit
@@ -34,5 +34,5 @@ jobs:
       contents: read
       actions: write
     with:
-      runner-image-uri: ${{ needs.build.outputs.image-uri }}
-      runner-ubuntu20-image-uri: ${{ needs.build-ubuntu20.outputs.image-uri }}
+      runner-image-uri-ubuntu22: ${{ needs.build-ubuntu22.outputs.image-uri }}
+      runner-image-uri-ubuntu20: ${{ needs.build-ubuntu20.outputs.image-uri }}

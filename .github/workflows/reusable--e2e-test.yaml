@@ -3,11 +3,11 @@ name: e2e-test
 on:
   workflow_call:
     inputs:
-      runner-image-uri:
+      runner-image-uri-ubuntu22:
         type: string
         required: true
         description: Image URI of runner
-      runner-ubuntu20-image-uri:
+      runner-image-uri-ubuntu20:
         type: string
         required: true
         description: Image URI of runner (ubuntu20)
@@ -43,16 +43,16 @@ jobs:
       - run: make controller
       - run: make runner-scale-set
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu22
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu22 }}
       - run: sleep 60
       - run: make runner-scale-set
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu20 }}
       - run: make wait-for-runner
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu22
       - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
@@ -82,13 +82,13 @@ jobs:
               run_id: context.runId,
             })
 
-  test:
+  ubuntu22:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: ${{ inputs.runner-base-name }}
+      runner-name: ${{ inputs.runner-base-name }}-ubuntu22
       expected-image-os: ubuntu22
 
-  test-ubuntu20:
+  ubuntu20:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
       runner-name: ${{ inputs.runner-base-name }}-ubuntu20
