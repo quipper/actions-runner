@@ -1,12 +1,9 @@
-# Extract the runner version from the upstream image
 FROM ghcr.io/actions/actions-runner:2.322.0@sha256:c02e8e1b479ea39b196c3bb0a40a66a191302654a6ef5c042eafe11c13323137 AS upstream
-RUN /home/runner/bin/Runner.Listener --version > /runner-version
 
 FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-focal@sha256:939d4408b41d8cca7d749716842456a9618e2964c866d634a466810f873e0bfa
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_CONTAINER_HOOKS_VERSION=0.3.2
 ARG DOCKER_VERSION=24.0.6
 
 # DO NOT ADD ANY PACKAGE!
@@ -45,19 +42,6 @@ RUN adduser --disabled-password --gecos "" --uid 1001 runner \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
-COPY --from=upstream /runner-version /runner-version
-WORKDIR /home/runner
-RUN export RUNNER_VERSION=$(cat /runner-version) \
-    export RUNNER_ARCH=${TARGETARCH} \
-    && if [ "$RUNNER_ARCH" = "amd64" ]; then export RUNNER_ARCH=x64 ; fi \
-    && curl -f -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-${TARGETOS}-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz \
-    && tar xzf ./runner.tar.gz \
-    && rm runner.tar.gz
-
-RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip \
-    && unzip ./runner-container-hooks.zip -d ./k8s \
-    && rm runner-container-hooks.zip
-
 RUN export RUNNER_ARCH=${TARGETARCH} \
     && if [ "$RUNNER_ARCH" = "amd64" ]; then export DOCKER_ARCH=x86_64 ; fi \
     && if [ "$RUNNER_ARCH" = "arm64" ]; then export DOCKER_ARCH=aarch64 ; fi \
@@ -66,6 +50,9 @@ RUN export RUNNER_ARCH=${TARGETARCH} \
     && rm -rf docker.tgz \
     && install -o root -g root -m 755 docker/* /usr/bin/ \
     && rm -rf docker
+
+WORKDIR /home/runner
+COPY --chown=runner:docker --from=upstream /home/runner .
 
 # Some setup actions store cache into /opt/hostedtoolcache
 ENV RUNNER_TOOL_CACHE=/opt/hostedtoolcache
