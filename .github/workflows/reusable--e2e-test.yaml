@@ -3,10 +3,10 @@ name: e2e-test
 on:
   workflow_call:
     inputs:
-      runner-image-uri-ubuntu22:
+      runner-image-uri-latest:
         type: string
         required: true
-        description: Image URI of runner
+        description: Image URI of runner (latest)
       runner-image-uri-ubuntu20:
         type: string
         required: true
@@ -41,22 +41,26 @@ jobs:
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
       - run: make controller
+
       - run: make runner-scale-set
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu22
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu22 }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-latest
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-latest }}
       - run: make runner-scale-set
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu20 }}
+
+      # Register a dummy runner scale set to ensure GitHub picks the jobs.
       - run: sleep 60
       - run: make runner-scale-set
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-dummy
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu22 }}
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-latest }}
+
       - run: make wait-for-runner
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu22
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-latest
       - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
@@ -86,13 +90,13 @@ jobs:
               run_id: context.runId,
             })
 
-  ubuntu22:
+  runner-latest:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: ${{ inputs.runner-base-name }}-ubuntu22
+      runner-name: ${{ inputs.runner-base-name }}-latest
       expected-image-os: ubuntu22
 
-  ubuntu20:
+  runner-ubuntu20:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
       runner-name: ${{ inputs.runner-base-name }}-ubuntu20
