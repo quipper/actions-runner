@@ -1,8 +1,11 @@
+# Extract the runner version from the upstream image
+FROM ghcr.io/actions/actions-runner:2.322.0@sha256:c02e8e1b479ea39b196c3bb0a40a66a191302654a6ef5c042eafe11c13323137 AS upstream
+RUN /home/runner/bin/Runner.Listener --version > /runner-version
+
 FROM mcr.microsoft.com/dotnet/runtime-deps:6.0-focal@sha256:939d4408b41d8cca7d749716842456a9618e2964c866d634a466810f873e0bfa
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG RUNNER_VERSION=2.322.0
 ARG RUNNER_CONTAINER_HOOKS_VERSION=0.3.2
 ARG DOCKER_VERSION=24.0.6
 
@@ -42,8 +45,10 @@ RUN adduser --disabled-password --gecos "" --uid 1001 runner \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
 
+COPY --from=upstream /runner-version /runner-version
 WORKDIR /home/runner
-RUN export RUNNER_ARCH=${TARGETARCH} \
+RUN export RUNNER_VERSION=$(cat /runner-version) \
+    export RUNNER_ARCH=${TARGETARCH} \
     && if [ "$RUNNER_ARCH" = "amd64" ]; then export RUNNER_ARCH=x64 ; fi \
     && curl -f -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-${TARGETOS}-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./runner.tar.gz \

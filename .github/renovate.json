@@ -12,30 +12,7 @@
     "renovate",
     "renovate/{{depName}}"
   ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "Update actions/runner version",
-      "fileMatch": [
-        "^Dockerfile"
-      ],
-      "matchStrings": [
-        "RUNNER_VERSION=(?<currentValue>.*?)\\s"
-      ],
-      "depNameTemplate": "actions/runner",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.*)$"
-    }
-  ],
   "packageRules": [
-    {
-      "description": "Group actions-runner",
-      "matchDepNames": [
-        "actions/runner",
-        "ghcr.io/actions/actions-runner"
-      ],
-      "groupName": "actions-runner"
-    },
     {
       "description": "Group actions-runner-controller charts",
       "matchDepNames": [
