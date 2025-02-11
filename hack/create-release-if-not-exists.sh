@@ -6,7 +6,7 @@ set_comment_output () {
 }
 
 actions_runner_version="$(docker run --rm "$RUNNER_IMAGE_URI" /home/runner/bin/Runner.Listener --version)"
-if [[ $actions_runner_version =~ ^[0-9]+?\.[0-9]+?\.[0-9]+?$ ]]; then
+if ! echo "$actions_runner_version" | egrep '^[0-9]+?\.[0-9]+?\.[0-9]+?$'; then
   echo "Invalid runner version: $actions_runner_version" >&2
   exit 1
 fi

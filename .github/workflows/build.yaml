@@ -42,7 +42,6 @@ jobs:
   create-release-if-not-exists:
     needs:
       - build-ubuntu22
-      - e2e-test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
