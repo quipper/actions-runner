@@ -14,7 +14,7 @@ on:
       runner-base-name:
         type: string
         description: Base name of runner
-        default: test-runner-${{ github.event.pull_request.number || github.ref_name }}
+        default: e2e-${{ github.event.pull_request.number || github.ref_name }}
 
 concurrency:
   # One workflow run per a pull request or pushed branch
@@ -24,7 +24,7 @@ concurrency:
 jobs:
   controller:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 7
     defaults:
       run:
         working-directory: e2e-test
@@ -40,20 +40,22 @@ jobs:
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
-      - run: make deploy
+      - run: make controller
+      - run: make runner-scale-set
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
-          ARC_RUNNER_UBUNTU20_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
-      - run: make wait-for-listeners
+      - run: sleep 60
+      - run: make runner-scale-set
+        env:
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-ubuntu20-image-uri }}
+      - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
-      - run: make wait-for-job
+      - run: make wait-for-runner
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
-          ARC_RUNNER_UBUNTU20_NAME: ${{ inputs.runner-base-name }}-ubuntu20
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
       - run: make runner-logs
         if: always()
       - run: make listener-logs

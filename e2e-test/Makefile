@@ -15,22 +15,20 @@ create-github-config-secret:
 		"--from-literal=github_app_installation_id=$${APP_INSTALLATION_ID}" \
 		"--from-literal=github_app_private_key=$${APP_PRIVATE_KEY}"
 
-.PHONY: deploy
-deploy:
-	helmfile sync
-	helm list -A
+.PHONY: controller
+controller:
+	helmfile sync -l name=arc
 	kubectl get pods -n arc-systems
 
-.PHONY: wait-for-listeners
-wait-for-listeners:
-	while ! kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
-	while ! kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
+.PHONY: runner-scale-set
+runner-scale-set:
+	helmfile sync -l name=$(ARC_RUNNER_NAME)
+	until kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
 
-.PHONY: wait-for-job
-wait-for-job:
-	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
-	while ! kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_UBUNTU20_NAME) --all --for=condition=Ready; do sleep 1; done
+.PHONY: wait-for-runner
+wait-for-runner:
+	until kubectl wait pods -n arc-runners -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-runners
 
 # Unregister runners and runner sets from GitHub
