@@ -40,9 +40,6 @@ COPY entrypoint.sh /
 
 VOLUME /var/lib/docker
 
-# docker-init sends the signal to children
-ENV RUNNER_MANUALLY_TRAP_SIG=
-
 # Disable the log by default, because it is too large
 ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=
 
