@@ -38,7 +38,7 @@ jobs:
 
       # When Renovate has updated the runner version,
       # automatically create a new release into GitHub Releases.
-      - uses: actions/create-github-app-token@064492a9a1762067169d50c792a7dc02bc3d1254 # v2.0.0
+      - uses: actions/create-github-app-token@3ff1caaa28b64c9cc276ce0a02e2ff584f3900c5 # v2.0.2
         id: release-token
         with:
           app-id: ${{ secrets.E2E_TEST_APP_ID }}
