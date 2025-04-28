@@ -39,7 +39,7 @@ jobs:
 
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3
+          ruby-version: 3.4
       - run: ruby --version
       - run: gem --version
 
