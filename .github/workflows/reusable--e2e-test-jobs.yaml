@@ -41,7 +41,7 @@ jobs:
       - if: inputs.expected-image-os != 'ubuntu20'
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3
+          ruby-version: 3.4.7
       - if: inputs.expected-image-os != 'ubuntu20'
         run: ruby --version
       - if: inputs.expected-image-os != 'ubuntu20'
