@@ -40,24 +40,13 @@ jobs:
           APP_ID: ${{ secrets.E2E_TEST_APP_ID }}
           APP_INSTALLATION_ID: ${{ secrets.E2E_TEST_APP_INSTALLATION_ID }}
           APP_PRIVATE_KEY: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
-      - run: make controller
-
-      - run: make runner-scale-set
+      - run: make install
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-latest
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-latest }}
-      - run: make runner-scale-set
-        env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu20 }}
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_IMAGE_LATEST_URI: ${{ inputs.runner-image-uri-latest }}
+          ARC_RUNNER_IMAGE_UBUNTU20_URI: ${{ inputs.runner-image-uri-ubuntu20 }}
 
-      # Register a dummy runner scale set to ensure GitHub picks the jobs.
       - run: sleep 60
-      - run: make runner-scale-set
-        env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-dummy
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-latest }}
-
       - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-latest
