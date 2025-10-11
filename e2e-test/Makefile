@@ -21,9 +21,9 @@ controller:
 	until kubectl wait pods -n arc-systems -l app.kubernetes.io/component=controller-manager --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
 
-.PHONY: runner
-runner:
-	kustomize build --enable-helm runner | \
+.PHONY: runner-scale-set
+runner-scale-set:
+	kustomize build --enable-helm runner-scale-set | \
 		sed \
 		-e 's|ARC_RUNNER_NAME|$(ARC_RUNNER_NAME)|g' \
 		-e 's|ARC_RUNNER_IMAGE_URI|$(ARC_RUNNER_IMAGE_URI)|g' | \

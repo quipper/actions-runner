@@ -8,7 +8,7 @@ helmCharts:
     repo: oci://ghcr.io/actions/actions-runner-controller-charts
     version: 0.12.1
     namespace: arc-runners
-    releaseName: ARC_RUNNER_NAME
+    releaseName: runner-scale-set
     valuesMerge: replace
     valuesInline:
       githubConfigUrl: https://github.com/quipper/actions-runner
@@ -16,6 +16,7 @@ helmCharts:
       controllerServiceAccount:
         namespace: arc-system
         name: arc-gha-rs-controller
+      runnerScaleSetName: ARC_RUNNER_NAME
       template:
         spec:
           containers:
