@@ -28,6 +28,8 @@ runner-scale-set:
 		-e 's|ARC_RUNNER_NAME|$(ARC_RUNNER_NAME)|g' \
 		-e 's|ARC_RUNNER_IMAGE_URI|$(ARC_RUNNER_IMAGE_URI)|g' | \
 		kubectl apply -f - --server-side=true
+	until kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
+	kubectl get pods -n arc-systems
 
 .PHONY: wait-for-runner
 wait-for-runner:

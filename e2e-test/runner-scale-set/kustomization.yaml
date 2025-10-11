@@ -14,7 +14,7 @@ helmCharts:
       githubConfigUrl: https://github.com/quipper/actions-runner
       githubConfigSecret: github-config
       controllerServiceAccount:
-        namespace: arc-system
+        namespace: arc-systems
         name: arc-gha-rs-controller
       runnerScaleSetName: ARC_RUNNER_NAME
       template:
