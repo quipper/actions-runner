@@ -6,11 +6,6 @@ repositories:
     oci: true
 
 releases:
-  - name: arc
-    namespace: arc-systems
-    chart: actions-runner-controller-charts/gha-runner-scale-set-controller
-    version: 0.12.1
-
   - name: '{{ env "ARC_RUNNER_NAME" }}'
     namespace: arc-runners
     chart: actions-runner-controller-charts/gha-runner-scale-set

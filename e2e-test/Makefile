@@ -17,7 +17,7 @@ create-github-config-secret:
 
 .PHONY: controller
 controller:
-	helmfile sync -l name=arc
+	kustomize build --enable-helm controller | kubectl apply -f -
 	kubectl get pods -n arc-systems
 
 .PHONY: runner-scale-set
