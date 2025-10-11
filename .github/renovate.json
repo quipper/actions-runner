@@ -12,6 +12,11 @@
     "renovate",
     "renovate/{{depName}}"
   ],
+  "timezone": "Asia/Tokyo",
+  "schedule": [
+    "on Sunday"
+  ],
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
       "description": "Group actions-runner-controller charts",
