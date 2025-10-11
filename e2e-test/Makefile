@@ -17,12 +17,17 @@ create-github-config-secret:
 
 .PHONY: controller
 controller:
-	helmfile sync -l name=arc
+	kustomize build --enable-helm controller | kubectl apply -f - --server-side=true
+	until kubectl wait pods -n arc-systems -l app.kubernetes.io/component=controller-manager --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
 
 .PHONY: runner-scale-set
 runner-scale-set:
-	helmfile sync -l name=$(ARC_RUNNER_NAME)
+	kustomize build --enable-helm runner-scale-set | \
+		sed \
+		-e 's|ARC_RUNNER_NAME|$(ARC_RUNNER_NAME)|g' \
+		-e 's|ARC_RUNNER_IMAGE_URI|$(ARC_RUNNER_IMAGE_URI)|g' | \
+		kubectl apply -f - --server-side=true
 	until kubectl wait pods -n arc-systems -l actions.github.com/scale-set-name=$(ARC_RUNNER_NAME) --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
 
