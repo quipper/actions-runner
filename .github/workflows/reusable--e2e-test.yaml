@@ -51,7 +51,13 @@ jobs:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-ubuntu20
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-ubuntu20 }}
 
+      # Register a dummy runner scale set to ensure GitHub picks the jobs.
       - run: sleep 60
+      - run: make runner-scale-set
+        env:
+          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-dummy
+          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri-latest }}
+
       - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-latest
