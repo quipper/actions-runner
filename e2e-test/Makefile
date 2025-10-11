@@ -18,6 +18,7 @@ create-github-config-secret:
 .PHONY: controller
 controller:
 	kustomize build --enable-helm controller | kubectl apply -f -
+	until kubectl wait pods -n arc-systems -l app.kubernetes.io/component=controller-manager --all --for=condition=Ready; do sleep 1; done
 	kubectl get pods -n arc-systems
 
 .PHONY: runner-scale-set
