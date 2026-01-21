@@ -1,5 +1,5 @@
 # https://github.com/actions/runner/blob/main/images/Dockerfile
-FROM ghcr.io/actions/actions-runner:2.329.0@sha256:75599cd393958a52142f489a160123f5b9b21605a40609696deb13d49867d53f
+FROM ghcr.io/actions/actions-runner:2.331.0@sha256:dced476aa42703ebd9aafc295ce52f160989c4528e831fc3be2aef83a1b3f6da
 
 ARG TARGETOS
 ARG TARGETARCH

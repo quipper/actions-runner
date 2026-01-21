@@ -94,7 +94,7 @@ jobs:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
       runner-name: ${{ inputs.runner-base-name }}-latest
-      expected-image-os: ubuntu22
+      expected-image-os: ubuntu24
 
   runner-ubuntu20:
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
