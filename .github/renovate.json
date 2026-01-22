@@ -17,6 +17,7 @@
     "on Sunday"
   ],
   "minimumReleaseAge": "3 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
   "packageRules": [
     {
       "description": "Group actions-runner-controller charts",
