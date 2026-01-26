@@ -15,7 +15,7 @@ We extend the official image for the following issues:
 - Run both runner and Dockerd in same container for the resource efficiency of Kubernetes nodes.
   This image starts Dockerd under docker-init.
 - Add some essential packages such as `git`
-- Support Ubuntu 20.04 runner for backward compatibility
+- ~Support Ubuntu 20.04 runner for backward compatibility~
 - ~Run a job on both amd64 and arm64 nodes.
   This repository provides a multi-architectures image.
   ([community#56720](https://github.com/orgs/community/discussions/56720))~ (resolved by [actions/runner#2601](https://github.com/actions/runner/pull/2601))
