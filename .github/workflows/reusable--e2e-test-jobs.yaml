@@ -37,15 +37,11 @@ jobs:
           context: e2e-test
           file: e2e-test/fixture.dockerfile
 
-      # setup-ruby does not support ubuntu-20.04
-      - if: inputs.expected-image-os != 'ubuntu20'
-        uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 4.0.1
-      - if: inputs.expected-image-os != 'ubuntu20'
-        run: ruby --version
-      - if: inputs.expected-image-os != 'ubuntu20'
-        run: gem --version
+      - run: ruby --version
+      - run: gem --version
 
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
