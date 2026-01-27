@@ -2,7 +2,17 @@ name: build
 
 on:
   pull_request:
+    paths:
+      - Dockerfile
+      - entrypoint.sh
+      - e2e-tests/**
+      - hack/**
   push:
+    paths:
+      - Dockerfile
+      - entrypoint.sh
+      - e2e-tests/**
+      - hack/**
     branches:
       - main
     tags:
