@@ -4,7 +4,7 @@
     "config:recommended",
     ":automergeMinor",
     ":automergeDigest",
-    ":reviewer(team:sre-actions-runner)",
+    ":reviewer(team:sre-jp)",
     "helpers:pinGitHubActionDigests",
     "github>aquaproj/aqua-renovate-config#2.10.0"
   ],
