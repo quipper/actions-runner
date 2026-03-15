@@ -6,7 +6,7 @@
     ":automergeDigest",
     ":reviewer(team:sre-jp)",
     "helpers:pinGitHubActionDigests",
-    "github>aquaproj/aqua-renovate-config#2.10.0"
+    "github>aquaproj/aqua-renovate-config#2.11.0"
   ],
   "labels": [
     "renovate",
