@@ -1,9 +1,9 @@
-FROM debian:trixie-20260623 AS builder
+FROM debian:13 AS builder
 WORKDIR /workspace
 COPY Makefile /workspace
 RUN test -s Makefile
 
-FROM debian:trixie-20260623
+FROM debian:13
 WORKDIR /
 COPY --from=builder /workspace/Makefile .
 RUN test -s Makefile
