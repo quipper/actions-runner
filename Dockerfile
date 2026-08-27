@@ -19,12 +19,16 @@ RUN sudo apt-get update -y \
         unzip \
         zip \
         # Packages in actions-runner-controller/runner-20.04
+        # https://github.com/actions/actions-runner-controller/blob/master/runner/actions-runner-dind.ubuntu-20.04.dockerfile
         build-essential \
         locales \
         tzdata \
-        # ruby/setup-ruby dependencies
+        # ruby/setup-ruby dependencies:
         # https://github.com/ruby/setup-ruby#using-self-hosted-runners
         libyaml-dev \
+        # actions/cache dependencies:
+        # https://github.com/actions/cache#pre-requisites
+        zstd \
         # dockerd dependencies
         iptables \
     # Remove the extra repository to reduce time of apt-get update
