@@ -43,13 +43,6 @@ jobs:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
 
-      # Register a dummy runner scale set to ensure GitHub picks the jobs.
-      - run: sleep 60
-      - run: make runner-scale-set
-        env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}-dummy
-          ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
-
       - run: make wait-for-runner
         env:
           ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
