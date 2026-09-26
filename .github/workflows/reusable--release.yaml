@@ -38,7 +38,7 @@ jobs:
           # Trigger the build workflow against the new release
           RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
       - if: steps.create-release.outputs.comment
-        uses: int128/comment-action@a4a97c4abd5181a63e45088025ed172742580bef # v1.75.0
+        uses: int128/comment-action@7acaa0f6c06c7d9688209dfad956a3a57664c392 # v1.78.0
         with:
           update-if-exists: replace
           post: ${{ steps.create-release.outputs.comment }}
