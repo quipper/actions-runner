@@ -42,6 +42,10 @@ RUN sudo mkdir /opt/hostedtoolcache \
 
 COPY entrypoint.sh /
 
+# Fix the home directory permission as GitHub-hosted runner.
+# https://github.com/actions/runner/pull/4083
+RUN sudo chmod 750 /home/runner
+
 VOLUME /var/lib/docker
 
 # Disable the log by default, because it is too large
