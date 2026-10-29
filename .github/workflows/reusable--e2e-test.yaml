@@ -7,10 +7,6 @@ on:
         type: string
         required: true
         description: Image URI of runner
-      runner-base-name:
-        type: string
-        description: Base name of runner
-        default: e2e-${{ github.event.pull_request.number || github.ref_name }}
 
 concurrency:
   # One workflow run per a pull request or pushed branch
@@ -18,7 +14,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  runner-name:
+    runs-on: ubuntu-slim
+    timeout-minutes: 3
+    outputs:
+      runner-name: ${{ steps.generate.outputs.runner-name }}
+    steps:
+      # Generate a random name to isolate the runner scale set from other workflows
+      - id: generate
+        run: echo "runner-name=e2e-${GITHUB_RUN_ID}-$(openssl rand -hex 8)" >> "$GITHUB_OUTPUT"
+
   controller:
+    needs: runner-name
     runs-on: ubuntu-latest
     timeout-minutes: 7
     defaults:
@@ -40,12 +47,12 @@ jobs:
 
       - run: make runner-scale-set
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_NAME: ${{ needs.runner-name.outputs.runner-name }}
           ARC_RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
 
       - run: make wait-for-runner
         env:
-          ARC_RUNNER_NAME: ${{ inputs.runner-base-name }}
+          ARC_RUNNER_NAME: ${{ needs.runner-name.outputs.runner-name }}
       - run: make runner-logs
         if: always()
       - run: make listener-logs
@@ -73,7 +80,8 @@ jobs:
             })
 
   runner-latest:
+    needs: runner-name
     uses: ./.github/workflows/reusable--e2e-test-jobs.yaml
     with:
-      runner-name: ${{ inputs.runner-base-name }}
+      runner-name: ${{ needs.runner-name.outputs.runner-name }}
       expected-image-os: ubuntu24
