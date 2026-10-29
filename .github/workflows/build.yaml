@@ -19,8 +19,6 @@ on:
       - hack/**
     branches:
       - main
-    tags:
-      - '*'
 
 jobs:
   build:
@@ -28,6 +26,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
+      attestations: write
 
   e2e-test:
     needs:
@@ -41,12 +41,13 @@ jobs:
       runner-image-uri: ${{ needs.build.outputs.image-uri }}
 
   release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - build
+      - e2e-test
     uses: ./.github/workflows/reusable--release.yaml
-    secrets: inherit
     permissions:
-      contents: read
-      pull-requests: write
+      contents: write
+      packages: write
     with:
       runner-image-uri: ${{ needs.build.outputs.image-uri }}
