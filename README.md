@@ -32,9 +32,10 @@ When a new version of actions/runner is released,
 
 1. Renovate creates a pull request to update a dependency
 2. Renovate automatically merges it
-3. GitHub Actions automatically creates [a release](https://github.com/quipper/actions-runner/releases) corresponding to the runner version
+3. GitHub Actions builds an image and runs the E2E test
+4. GitHub Actions adds the tag of runner version, such as `2.304.0`, to the tested image
+5. GitHub Actions creates [a release](https://github.com/quipper/actions-runner/releases) corresponding to the runner version, if not exists
 
-Here is the versioning policy.
-
-- Use same version as the upstream, such as `2.304.0`
-- If we have added a change, increment the patch version. For example, if the upstream is `2.304.0`, we will create `2.304.1`
+When a change is pushed into the main branch, the tag of runner version is overwritten by the new image.
+Pin the image digest, such as `ghcr.io/quipper/actions-runner:2.304.0@sha256:...`.
+Renovate will update the digest.

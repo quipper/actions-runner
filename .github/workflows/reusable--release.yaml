@@ -9,36 +9,41 @@ on:
         description: Image URI of runner
 
 jobs:
-  create-release-if-not-exists:
+  tag-runner-version:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Do not run concurrently to avoid overwriting the tag by an older image
+    concurrency:
+      group: ${{ github.workflow }}--tag-runner-version
+      cancel-in-progress: false
     permissions:
-      contents: read
-      pull-requests: write
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - id: get-runner-version
         run: bash hack/get-runner-version.sh
         env:
           RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
 
-      # When Renovate has updated the runner version,
-      # automatically create a new release into GitHub Releases.
-      - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
-        id: release-token
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
-          app-id: ${{ secrets.E2E_TEST_APP_ID }}
-          private-key: ${{ secrets.E2E_TEST_APP_PRIVATE_KEY }}
-      - id: create-release
-        run: bash hack/create-release-if-not-exists.sh
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Add the runner version tag to the tested image without rebuild
+      - run: docker buildx imagetools create -t "ghcr.io/${GITHUB_REPOSITORY}:${RUNNER_VERSION}" "$RUNNER_IMAGE_URI"
+        env:
+          RUNNER_VERSION: ${{ steps.get-runner-version.outputs.runner-version }}
+          RUNNER_IMAGE_URI: ${{ inputs.runner-image-uri }}
+
+      # When Renovate has updated the runner version,
+      # create a new release into GitHub Releases.
+      - run: bash hack/create-release-if-not-exists.sh
         env:
           RUNNER_VERSION: ${{ steps.get-runner-version.outputs.runner-version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Trigger the build workflow against the new release
-          RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
-      - if: steps.create-release.outputs.comment
-        uses: int128/comment-action@57130c0b08c149c4ba778ea2dbf5d9e2ac5d1917 # v1.79.0
-        with:
-          update-if-exists: replace
-          post: ${{ steps.create-release.outputs.comment }}
