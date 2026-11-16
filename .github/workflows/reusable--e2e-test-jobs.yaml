@@ -22,6 +22,13 @@ jobs:
       - run: test "$ImageOS" = "$expected_image_os"
         env:
           expected_image_os: ${{ inputs.expected-image-os }}
+      # The pod memory limit applies to job containers only when they are under the pod cgroup.
+      - name: Test docker run creates the container under the pod cgroup
+        run: |
+          pod_cgroup="$(dirname "$(cut -d: -f3 /proc/self/cgroup)")"
+          cid="$(docker run -d debian:stable sleep 60)"
+          ls -d "/sys/fs/cgroup${pod_cgroup}/${cid}"
+          docker rm -f "$cid"
 
   test-actions:
     runs-on: ${{ inputs.runner-name }}
@@ -65,3 +72,8 @@ jobs:
           - 8080:80
     steps:
       - run: curl -sf http://localhost:8080
+      - name: Test the service container is under the pod cgroup
+        run: |
+          pod_cgroup="$(dirname "$(cut -d: -f3 /proc/self/cgroup)")"
+          cid="$(docker ps -q --no-trunc --filter ancestor=nginx:stable)"
+          ls -d "/sys/fs/cgroup${pod_cgroup}/${cid}"
